@@ -34,9 +34,8 @@
             <Hyperlink fx:id="login_registerHere" layoutX="184.0" layoutY="476.0" onAction="#switchForm" text="Register now!" />
             <ImageView fitHeight="78.0" fitWidth="81.0" layoutX="117.0" layoutY="27.0">
                <image>
-                  <Image url="@../../../../OneDrive/Desktop/ambulance-cross-hospital-icon-11.png" />
-               </image>
-            </ImageView>
+                  <Image url="@../../images/ambulance-cross-hospital-icon-11.png" />
+               </image></ImageView>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="register_form" layoutX="10.0" layoutY="6.0" prefHeight="200.0" prefWidth="358.0" visible="false">
