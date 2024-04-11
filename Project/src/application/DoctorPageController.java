@@ -107,7 +107,8 @@ public class DoctorPageController implements Initializable {
     		register_form.setVisible(false);
 
     	}else if(event.getSource() == login_registerHere) {
-    		
+    		login_form.setVisible(false);
+    		register_form.setVisible(true);
     	}
     	
     	
