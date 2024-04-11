@@ -114,25 +114,28 @@ public class Controller {
 	private AlertMessage alert = new AlertMessage();
 	
 	public void loginAccount() {
-	    if (login_username.getText().isEmpty() || login_password.getText().isEmpty()) {
+	    if (login_username.getText().isEmpty() && login_password.getText().isEmpty()) {
 	        alert.errorMessage("Incorrect Username/Password");
 	    } else {
 	        String username = login_username.getText();
 	        String password = login_password.getText();
+	        
+	        // Check if the show password field is visible
+	        if (login_showPassword.isVisible()) {
+	            // Use the visible password field
+	            password = login_showPassword.getText();
+	        }
+	        
+	        
 	        
 	        String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
 	        
 	        connect = Database.connectDB();
 	        
 	        try {
-	            if (login_showPassword.isVisible()) {
-	                // Use the visible password field
-	                password = login_showPassword.getText();
-	            }
-	            
 	            prepare = connect.prepareStatement(sql);
 	            prepare.setString(1, username);
-	            prepare.setString(2, password);
+	            prepare.setString(2, login_password.getText());
 	            result = prepare.executeQuery();
 	            
 	            if (result.next()) {
@@ -140,10 +143,12 @@ public class Controller {
 	                alert.successMessage("Login Successfully");
 	            } else {
 	                // Wrong
-	                alert.errorMessage("Incorrect Username/Password");
+	                alert.errorMessage("Incorrect Username/Password");    
 	            }
-	        } catch (Exception e) {
+	        } catch (SQLException e) {
 	            e.printStackTrace();
+	            alert.errorMessage("An error occurred. Please try again later.");
+	            
 	        } finally {
 	            // Close resources
 	            try {
