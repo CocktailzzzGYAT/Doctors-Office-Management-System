@@ -61,7 +61,7 @@
             <Hyperlink fx:id="register_loginHere" layoutX="206.0" layoutY="475.0" onAction="#switchForm" text="Login Now!" />
             <ImageView fitHeight="70.0" fitWidth="84.0" layoutX="124.0" layoutY="31.0">
                <image>
-                  <Image url="@../../../../Downloads/user-plus-solid.png" />
+                  <Image url="@../../images/user-plus-solid.png" />
                </image>
             </ImageView>
          </children>
