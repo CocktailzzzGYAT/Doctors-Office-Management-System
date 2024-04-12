@@ -90,22 +90,76 @@ public class DoctorPageController implements Initializable {
 	private final AlertMessage alert = new AlertMessage();
 
 	@FXML
-	void loginAccount(ActionEvent event) {
+	void loginAccount() {
 
 	}
 
 	@FXML
-	void loginShowPassword(ActionEvent event) {
+	void loginShowPassword() {
+
+		
 
 	}
 
 	@FXML
-	void registerAccount(ActionEvent event) {
+	void registerAccount() {
 
+		if (register_fullName.getText().isEmpty() || register_email.getText().isEmpty()
+				|| register_doctorID.getText().isEmpty() || register_password.getText().isEmpty()) {
+
+			alert.errorMessage("Please fill all blank fields");
+		} else {
+			String checkDoctorID = "SELECT * FROM doctor WHERE doctor_id = '" + register_doctorID.getText() + "'";
+
+			connect = Database.connectDB();
+
+			try {
+
+				prepare = connect.prepareStatement(checkDoctorID);
+				result = prepare.executeQuery();
+
+				if (result.next()) {
+					alert.errorMessage(register_doctorID.getText() + " is already taken");
+
+				} else if (register_password.getText().length() < 8) {
+
+					alert.errorMessage("Invalid Password, at least 8 characters are needed");
+
+				} else {
+					
+					String insertData = "INSERT INTO doctor (full_name, email, doctor_id, password, date, status) " + "VALUES(?,?,?,?,?,?)";
+
+					
+					prepare = connect.prepareStatement(insertData);
+					
+					java.time.LocalDate currentDate = java.time.LocalDate.now();
+                    java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
+					
+					
+                    prepare.setString(1, register_fullName.getText());
+                    prepare.setString(2, register_email.getText());
+                    prepare.setString(3, register_doctorID.getText());
+                    prepare.setString(4, register_password.getText());
+                    prepare.setDate(5, sqlDate);
+                    prepare.setString(6, "Confirm");
+                    
+                    prepare.executeUpdate();
+                    
+                    alert.successMessage("registered successfully!");
+                    
+                    
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
 	}
 
 	@FXML
-	void registerShowPassword(ActionEvent event) {
+	void registerShowPassword() {
 
 	}
 
