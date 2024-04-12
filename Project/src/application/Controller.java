@@ -194,7 +194,9 @@ public boolean registerConfirmPassword(String password, String confirmPassword) 
     return password.equals(confirmPassword);
 }
 
-public void registerAccount() {
+public void registerAccount() { // Error handling checkbox password confirmation (register page admin)
+	
+	
     if (register_email.getText().isEmpty() || register_username.getText().isEmpty()
             || (register_password.getText().isEmpty() && !register_showPassword.isVisible())
             || register_password_confirm.getText().isEmpty()) {

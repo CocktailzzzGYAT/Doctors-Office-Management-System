@@ -54,7 +54,7 @@
             <TextField fx:id="register_fullName" layoutX="54.0" layoutY="170.0" prefWidth="220.0" promptText="Full Name" />
             <TextField fx:id="register_email" layoutX="53.0" layoutY="259.0" prefWidth="220.0" promptText="Email" />
             <PasswordField fx:id="register_password_confirm" layoutX="54.0" layoutY="344.0" prefWidth="220.0" promptText="Confirm Password" />
-            <TextField fx:id="register_showPassword" layoutX="54.0" layoutY="300.0" prefWidth="220.0" promptText="Email" />
+            <TextField fx:id="register_showPassword" layoutX="54.0" layoutY="300.0" prefWidth="220.0" promptText="Email" visible="false" />
             <PasswordField fx:id="register_password" layoutX="54.0" layoutY="300.0" prefWidth="220.0" promptText="Password" />
             <CheckBox fx:id="register_checkbox" layoutX="51.0" layoutY="384.0" mnemonicParsing="false" onAction="#registerShowPassword" text="Show Password" />
             <Button fx:id="register_signup" layoutX="42.0" layoutY="415.0" mnemonicParsing="false" onAction="#registerAccount" prefHeight="37.0" prefWidth="226.0" text="Sign Up" />

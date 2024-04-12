@@ -172,6 +172,38 @@ public class DoctorPageController implements Initializable {
 		}
 
 	}
+	
+	String doctorID = "DID-";
+	public void registerDoctorID() {
+		String doctorID = "DID-";
+		int tempID = 0;
+		
+		
+		String sql = "SELECT MAX(id) FROM doctor";
+		
+		connect = Database.connectDB();	
+		
+		try {
+			
+			prepare = connect.prepareStatement(sql);
+			result = prepare.executeQuery();
+			
+			if (result.next()) {
+				tempID = result.getInt("MAX(id)");
+			}
+			
+			if(tempID == 0) {
+				tempID += 1;
+				doctorID += tempID;
+			}else {
+				doctorID += (tempID+1);
+			}
+			
+		}catch(Exception e) {e.printStackTrace();}
+		
+		
+	}
+	
 
 	public void userList() {
 		List<String> listU = new ArrayList<>();
