@@ -160,6 +160,16 @@ public class DoctorPageController implements Initializable {
 
 	@FXML
 	void registerShowPassword() {
+		
+		if(register_checkbox.isSelected()) {
+			register_showPassword.setText(register_password.getText());
+			register_showPassword.setVisible(true);
+			register_password.setVisible(false);
+		}else {
+			register_password.setText(register_showPassword.getText());
+			register_showPassword.setVisible(false);
+			register_password.setVisible(true);
+		}
 
 	}
 
