@@ -54,7 +54,7 @@ and open the template in the editor.
     -fx-font-family: Arial;
 }
 .btn-1:hover{
-    -fx-background-color: linear-gradient(to bottom right, #11a7c9, #2765a4);
+    -fx-background-color: linear-gradient(to bottom right, #ff0000, #ff7171);
 }
 
 .btn-2{
