@@ -92,20 +92,55 @@ public class DoctorPageController implements Initializable {
 	@FXML
 	void loginAccount() {
 
-		if(login_doctorID.getText().isEmpty() 
-			|| login_password.getText().isEmpty()) { 
-			
+		if (login_doctorID.getText().isEmpty() || login_password.getText().isEmpty()) {
+
 			alert.errorMessage("Incorrect Username/Password");
+
+		} else {
+
+			String sql = "SELECT * FROM doctor WHERE doctor_id = ? AND password = ? AND date_deleted IS NULL";
+			connect = Database.connectDB();
+
+			try {
+				
+				String checkStatus = "SELECT status FROM doctor WHERE status = 'Confirm'";
+				
+				prepare = connect.prepareStatement(checkStatus);
+				result = prepare.executeQuery();
+				
+					
+				if(result.next()) {
+					
+					prepare = connect.prepareStatement(sql);
+					prepare.setString(1, login_doctorID.getText());
+					prepare.setString(2, login_password.getText());
+				}else {
+				
+					alert.errorMessage("Need the confirmation of Admin!");
+					
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
-		
+
 	}
 
 	@FXML
 	void loginShowPassword() {
-
+		if(login_checkbox.isSelected()) {
+			login_showPassword.setText(login_password.getText());
+			login_showPassword.setVisible(true);
+			login_password.setVisible(false);
+		}else {
+			login_password.setText(login_showPassword.getText());
+			login_showPassword.setVisible(false);
+			login_password.setVisible(true);
+		}
 		
 		
-
 	}
 
 	@FXML
@@ -133,28 +168,26 @@ public class DoctorPageController implements Initializable {
 					alert.errorMessage("Invalid Password, at least 8 characters are needed");
 
 				} else {
-					
-					String insertData = "INSERT INTO doctor (full_name, email, doctor_id, password, date, status) " + "VALUES(?,?,?,?,?,?)";
 
-					
+					String insertData = "INSERT INTO doctor (full_name, email, doctor_id, password, date, status) "
+							+ "VALUES(?,?,?,?,?,?)";
+
 					prepare = connect.prepareStatement(insertData);
-					
+
 					java.time.LocalDate currentDate = java.time.LocalDate.now();
-                    java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
-					
-					
-                    prepare.setString(1, register_fullName.getText());
-                    prepare.setString(2, register_email.getText());
-                    prepare.setString(3, register_doctorID.getText());
-                    prepare.setString(4, register_password.getText());
-                    prepare.setDate(5, sqlDate);
-                    prepare.setString(6, "Confirm");
-                    
-                    prepare.executeUpdate();
-                    
-                    alert.successMessage("registered successfully!");
-                    
-                    
+					java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
+
+					prepare.setString(1, register_fullName.getText());
+					prepare.setString(2, register_email.getText());
+					prepare.setString(3, register_doctorID.getText());
+					prepare.setString(4, register_password.getText());
+					prepare.setDate(5, sqlDate);
+					prepare.setString(6, "Confirm");
+
+					prepare.executeUpdate();
+
+					alert.successMessage("registered successfully!");
+
 				}
 
 			} catch (Exception e) {
@@ -162,58 +195,58 @@ public class DoctorPageController implements Initializable {
 			}
 
 		}
-		
+
 	}
 
 	@FXML
 	void registerShowPassword() {
-		
-		if(register_checkbox.isSelected()) {
+
+		if (register_checkbox.isSelected()) {
 			register_showPassword.setText(register_password.getText());
 			register_showPassword.setVisible(true);
 			register_password.setVisible(false);
-		}else {
+		} else {
 			register_password.setText(register_showPassword.getText());
 			register_showPassword.setVisible(false);
 			register_password.setVisible(true);
 		}
 
 	}
-	
+
 	String doctorID = "DID-";
+
 	public void registerDoctorID() {
 		String doctorID = "DID-";
 		int tempID = 0;
-		
-		
+
 		String sql = "SELECT MAX(id) FROM doctor";
-		
-		connect = Database.connectDB();	
-		
+
+		connect = Database.connectDB();
+
 		try {
-			
+
 			prepare = connect.prepareStatement(sql);
 			result = prepare.executeQuery();
-			
+
 			if (result.next()) {
 				tempID = result.getInt("MAX(id)");
 			}
-			
-			if(tempID == 0) {
+
+			if (tempID == 0) {
 				tempID += 1;
 				doctorID += tempID;
-			}else {
-				doctorID += (tempID+1);
+			} else {
+				doctorID += (tempID + 1);
 			}
-			
+
 			register_doctorID.setText(doctorID);
 			register_doctorID.setDisable(true);
-			
-		}catch(Exception e) {e.printStackTrace();}
-		
-		
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
-	
 
 	public void userList() {
 		List<String> listU = new ArrayList<>();
