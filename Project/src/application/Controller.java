@@ -152,11 +152,22 @@ public class Controller implements Initializable{
 	            if (result.next()) {
 	                // Correct
 	                alert.successMessage("Login Successfully");
+	                
+	                Parent root = FXMLLoader.load(getClass().getResource("MainScene.fxml"));
+                    Stage stage = new Stage();
+
+                    stage.setTitle("Hospital Management System | Admin Portal");
+                    stage.setScene(new Scene(root));
+                    stage.show();
+
+                    // TO HIDE YOUR ADMIN PAGE (LOGIN FORM)
+                    
+	                
 	            } else {
 	                // Wrong
 	                alert.errorMessage("Incorrect Username/Password");    
 	            }
-	        } catch (SQLException e) {
+	        } catch (Exception e) {
 	            e.printStackTrace();
 	            alert.errorMessage("An error occurred. Please try again later.");
 	            
