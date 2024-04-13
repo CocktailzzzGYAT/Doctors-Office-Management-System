@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 public class DoctorPageController implements Initializable {
 
 	@FXML
-	private TextField login_DoctorID;
+	private TextField login_doctorID;
 
 	@FXML
 	private CheckBox login_checkbox;
@@ -92,11 +92,18 @@ public class DoctorPageController implements Initializable {
 	@FXML
 	void loginAccount() {
 
+		if(login_doctorID.getText().isEmpty() 
+			|| login_password.getText().isEmpty()) { 
+			
+			alert.errorMessage("Incorrect Username/Password");
+		}
+		
 	}
 
 	@FXML
 	void loginShowPassword() {
 
+		
 		
 
 	}
@@ -199,6 +206,9 @@ public class DoctorPageController implements Initializable {
 				doctorID += (tempID+1);
 			}
 			
+			register_doctorID.setText(doctorID);
+			register_doctorID.setDisable(true);
+			
 		}catch(Exception e) {e.printStackTrace();}
 		
 		
@@ -281,6 +291,7 @@ public class DoctorPageController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		registerDoctorID();
 		userList();
 
 	}
