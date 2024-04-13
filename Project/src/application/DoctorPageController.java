@@ -92,41 +92,63 @@ public class DoctorPageController implements Initializable {
 	@FXML
 	void loginAccount() {
 
-		if (login_doctorID.getText().isEmpty() || login_password.getText().isEmpty()) {
+        if (login_doctorID.getText().isEmpty()
+                || login_password.getText().isEmpty()) {
+            alert.errorMessage("Incorrect Doctor ID/Password");
+        } else {
 
-			alert.errorMessage("Incorrect Username/Password");
+            String sql = "SELECT * FROM doctor WHERE doctor_id = ? AND password = ? AND delete_date IS NULL";
+            connect = Database.connectDB();
 
-		} else {
+            try {
 
-			String sql = "SELECT * FROM doctor WHERE doctor_id = ? AND password = ? AND date_deleted IS NULL";
-			connect = Database.connectDB();
+                if (!login_showPassword.isVisible()) {
+                    if (!login_showPassword.getText().equals(login_password.getText())) {
+                        login_showPassword.setText(login_password.getText());
+                    }
+                } else {
+                    if (!login_showPassword.getText().equals(login_password.getText())) {
+                        login_password.setText(login_showPassword.getText());
+                    }
+                }
 
-			try {
-				
-				String checkStatus = "SELECT status FROM doctor WHERE status = 'Confirm'";
-				
-				prepare = connect.prepareStatement(checkStatus);
-				result = prepare.executeQuery();
-				
-					
-				if(result.next()) {
-					
-					prepare = connect.prepareStatement(sql);
-					prepare.setString(1, login_doctorID.getText());
-					prepare.setString(2, login_password.getText());
-				}else {
-				
-					alert.errorMessage("Need the confirmation of Admin!");
-					
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+                // CHECK IF THE STATUS OF THE DOCTOR IS CONFIRM 
+                String checkStatus = "SELECT status FROM doctor WHERE doctor_id = '"
+                        + login_doctorID.getText() + "' AND password = '"
+                        + login_password.getText() + "' AND status = 'Confirm'";
 
-		}
+                prepare = connect.prepareStatement(checkStatus);
+                result = prepare.executeQuery();
 
-	}
+                if (result.next()) {
+
+                    alert.errorMessage("Need the confimation of the Admin!");
+                } else {
+                    prepare = connect.prepareStatement(sql);
+                    prepare.setString(1, login_doctorID.getText());
+                    prepare.setString(2, login_password.getText());
+
+                    result = prepare.executeQuery();
+
+                    if (result.next()) {
+                        
+                        
+                        
+                        alert.successMessage("Login Successfully!");
+                        
+                        
+                    } else {
+                        alert.errorMessage("Incorrect Doctor ID/Password");
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
 	@FXML
 	void loginShowPassword() {
