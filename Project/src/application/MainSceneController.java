@@ -1,6 +1,10 @@
 package application;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -283,6 +287,13 @@ public class MainSceneController implements Initializable {
 	    @FXML
 	    private Label top_username;
 	    
+	    private Connection connect;
+	    private PreparedStatement prepare;
+	    private Statement statement;
+	    private ResultSet result;
+	    
+	    
+	    
 	    
 	    public void switchForm(ActionEvent event) {
 
@@ -362,6 +373,34 @@ public class MainSceneController implements Initializable {
 
 	    }
 	    
+	    public void displayAdminIDUsername() {
+
+	        String sql = "SELECT * FROM admin WHERE username = '"
+	                + Data.admin_username + "'";
+
+	        connect = Database.connectDB();
+
+	        try {
+
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            if (result.next()) {
+	                nav_adminID.setText(result.getString("admin_id"));
+	                String tempUsername = result.getString("username");
+	                tempUsername = tempUsername.substring(0, 1).toUpperCase() + tempUsername.substring(1); 
+	                nav_username.setText(tempUsername);
+	                top_username.setText(tempUsername);
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
+	    
+	    
+	    
 	    public void runTime() {
 
 	        new Thread() {
@@ -389,6 +428,7 @@ public class MainSceneController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		runTime();
+		displayAdminIDUsername();
 		
 	}
 
