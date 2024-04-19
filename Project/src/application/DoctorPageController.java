@@ -120,7 +120,7 @@ public class DoctorPageController implements Initializable {
                 prepare = connect.prepareStatement(checkStatus);
                 result = prepare.executeQuery();
 
-                if (result.next()) {
+                if (!result.next()) {
 
                     alert.errorMessage("Need the confimation of the Admin!");
                 } else {
@@ -133,8 +133,22 @@ public class DoctorPageController implements Initializable {
                     if (result.next()) {
                         
                         
+                    	Data.doctor_id = result.getString("doctor_id");
+                    	Data.doctor_name = result.getString("full_name");
+                    	
                         
                         alert.successMessage("Login Successfully!");
+                        
+                        Parent root = FXMLLoader.load(getClass().getResource("DoctorMainForm.fxml"));
+                        Stage stage = new Stage();
+                        
+                        
+                        
+                        stage.setTitle("Doctor's Office | Doctor Main Form");
+                        stage.setScene(new Scene(root));
+                        stage.show();
+                        
+                        login_login.getScene().getWindow().hide();
                         
                         
                     } else {
