@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -299,7 +300,7 @@ public class DoctorMainFormController implements Initializable {
 	
 	
 
-	public ObservableList<AppointmentData> dashboardAppointmentTableView() {
+	/*public ObservableList<AppointmentData> dashboardAppointmentTableView() {
 
 		ObservableList<AppointmentData> listData = FXCollections.observableArrayList();
 
@@ -324,6 +325,98 @@ public class DoctorMainFormController implements Initializable {
 			e.printStackTrace();
 		}
 		return listData;
+	}*/
+	
+
+	
+    
+	@FXML
+    private TextArea patients_adress;
+    @FXML
+    private TextField patient_id;
+	public void register_patient() {
+
+	    if (patients_patientName.getText().isEmpty() || patients_mobileNumber.getText().isEmpty()
+	            || patients_adress.getText().isEmpty()) {
+	        alert.errorMessage("All blank fields must be filled");
+	    } else {
+	        String patient_name = patients_patientName.getText();
+	        String patient_phone= patients_mobileNumber.getText();
+	        String patient_adress = patients_adress.getText();
+	        
+	        
+	        String checkid = "SELECT * FROM patient WHERE patient_name = ?";
+	        connect = Database.connectDB();
+
+	        try {
+	            prepare = connect.prepareStatement(checkid);
+	            prepare.setString(1, patient_name);
+	            result = prepare.executeQuery();
+	            if (result.next()) {
+	                alert.errorMessage(patient_name + " Already exists!");
+
+	            } else {
+	                
+	                String insertData = "INSERT INTO patient (patient_name, patient_phone, patient_adress, date) VALUES (?, ?, ?, ?)";
+	                java.time.LocalDate currentDate = java.time.LocalDate.now();
+	                java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
+
+	                prepare = connect.prepareStatement(insertData);
+	                prepare.setString(1, patients_patientName.getText());
+	                prepare.setString(2, patients_mobileNumber.getText());
+	                prepare.setString(3, patients_adress.getText());
+	                prepare.setDate(4, sqlDate);
+	                prepare.executeUpdate();
+	                alert.successMessage("Registered Successfully");
+
+
+
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            // Close resources
+	            try {
+	                if (result != null)
+	                    result.close();
+	                if (prepare != null)
+	                    prepare.close();
+	                if (connect != null)
+	                    connect.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+	public void registerpatientID() {
+		String PID = "P-";
+		int tempID = 0;
+		connect = Database.connectDB();
+			String sql = "SELECT MAX(id) FROM patient";
+
+			try {
+
+				prepare = connect.prepareStatement(sql);
+				result = prepare.executeQuery();
+
+				if (result.next()) {
+					tempID = result.getInt("MAX(id)");
+				}
+
+				if (tempID == 0) {
+					tempID += 1;
+					PID += tempID;
+				} else {
+					PID += (tempID + 1);
+				}
+
+				patient_id.setText(PID);
+				patient_id.setDisable(true);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
 	}
 
 	public void displayAdminIDNumberName() {
@@ -381,6 +474,7 @@ public class DoctorMainFormController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		displayAdminIDNumberName();
 		runTime();
+		registerpatientID();
 
 	}
 
