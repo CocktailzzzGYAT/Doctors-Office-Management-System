@@ -9,6 +9,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -60,7 +61,7 @@
                               <String fx:value="header-2" />
                            </styleClass>
                         </Label>
-                        <Button fx:id="logout_btn" layoutX="876.0" layoutY="7.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Logout" AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="7.0" />
+                        <Button fx:id="logout_btn" layoutX="876.0" layoutY="7.0" mnemonicParsing="false" onAction="#logoutBtn" prefHeight="25.0" prefWidth="79.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Logout" AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="7.0" />
                      </children>
                      <styleClass>
                         <String fx:value="white-bg" />
@@ -113,7 +114,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="dashboard_form" layoutX="161.0" layoutY="112.0" prefHeight="560.0" prefWidth="886.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="dashboard_form" layoutX="161.0" layoutY="112.0" prefHeight="560.0" prefWidth="886.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="13.0" layoutY="14.0" prefHeight="156.0" prefWidth="860.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="14.0">
                                  <styleClass>
@@ -302,9 +303,10 @@
                                        <children>
                                           <TableView fx:id="dashboad_tableView" layoutX="13.0" layoutY="41.0" prefHeight="273.0" prefWidth="407.0" stylesheets="@DoctorMainFormDesign.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="41.0">
                                             <columns>
-                                              <TableColumn fx:id="dashboad_col_doctorID" prefWidth="81.0" text="Doctor ID" />
+                                              <TableColumn fx:id="dashboad_col_appointmentID" prefWidth="81.0" text="Doctor ID" />
                                               <TableColumn fx:id="dashboad_col_name" prefWidth="117.0" text="Name" />
-                                                <TableColumn fx:id="dashboad_col_specialized" prefWidth="119.0" text="Specialized" />
+                                                <TableColumn fx:id="dashboad_col_description" prefWidth="119.0" text="Specialized" />
+                                                <TableColumn fx:id="dashboad_col_appointmentDate" prefWidth="89.0" text="Status" />
                                                 <TableColumn fx:id="dashboad_col_status" prefWidth="89.0" text="Status" />
                                             </columns>
                                              <columnResizePolicy>
@@ -334,7 +336,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="patients_form" layoutX="1.0" prefHeight="560.0" prefWidth="886.0" stylesheets="@MainFormDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="patients_form" layoutX="1.0" prefHeight="560.0" prefWidth="886.0" stylesheets="@MainFormDesign.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="7.0" layoutY="7.0" prefHeight="545.0" prefWidth="574.0" stylesheets="@DoctorMainFormDesign.css" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="305.0" AnchorPane.topAnchor="7.0">
                                  <styleClass>
@@ -440,7 +442,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="appointments_form" layoutX="5.0" layoutY="5.0" prefHeight="560.0" prefWidth="886.0" stylesheets="@MainFormDesign.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="appointments_form" layoutX="5.0" layoutY="5.0" prefHeight="560.0" prefWidth="886.0" stylesheets="@MainFormDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="9.0" layoutY="12.0" prefHeight="264.0" prefWidth="868.0" stylesheets="@MainFormDesign.css" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0">
                                  <styleClass>
@@ -498,11 +500,12 @@
                                     <TextArea fx:id="appointment_address" layoutX="674.0" layoutY="25.0" prefHeight="40.0" prefWidth="167.0" styleClass="textfield-2" stylesheets="@DoctorMainFormDesign.css" />
                                     <Label layoutX="627.0" layoutY="84.0" text="Status:" />
                                     <ComboBox fx:id="appointment_status" layoutX="674.0" layoutY="80.0" prefHeight="25.0" prefWidth="168.0" promptText="Choose..." styleClass="textfield-2" stylesheets="@DoctorMainFormDesign.css" />
-                                    <Button fx:id="appointment_insertBtn" layoutX="167.0" layoutY="171.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Insert" />
+                                    <Button fx:id="appointment_insertBtn" layoutX="167.0" layoutY="171.0" mnemonicParsing="false" onAction="#appointmentInsertBtn" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Insert" />
                                     <Button fx:id="appointment_updateBtn" layoutX="286.0" layoutY="171.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Update" />
-                                    <Button fx:id="appointment_clearBtn" layoutX="430.0" layoutY="171.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Clear" />
+                                    <Button fx:id="appointment_clearBtn" layoutX="430.0" layoutY="171.0" mnemonicParsing="false" onAction="#appointmentClearBtn" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Clear" />
                                     <Button fx:id="appointment_deleteBtn" layoutX="549.0" layoutY="171.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Delete" />
                                     <Label layoutX="612.0" layoutY="125.0" text="Schedule:" />
+                                    <DatePicker layoutX="671.0" layoutY="121.0" />
                                  </children>
                               </AnchorPane>
                            </children>
