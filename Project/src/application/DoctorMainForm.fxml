@@ -503,9 +503,9 @@
                                     <Button fx:id="appointment_insertBtn" layoutX="167.0" layoutY="171.0" mnemonicParsing="false" onAction="#appointmentInsertBtn" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Insert" />
                                     <Button fx:id="appointment_updateBtn" layoutX="286.0" layoutY="171.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Update" />
                                     <Button fx:id="appointment_clearBtn" layoutX="430.0" layoutY="171.0" mnemonicParsing="false" onAction="#appointmentClearBtn" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Clear" />
-                                    <Button fx:id="appointment_deleteBtn" layoutX="549.0" layoutY="171.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Delete" />
+                                    <Button fx:id="appointment_deleteBtn" layoutX="549.0" layoutY="171.0" mnemonicParsing="false" onAction="#appointmentDeleteBtn" prefHeight="36.0" prefWidth="100.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Delete" />
                                     <Label layoutX="612.0" layoutY="125.0" text="Schedule:" />
-                                    <DatePicker layoutX="671.0" layoutY="121.0" />
+                                    <DatePicker fx:id="appointment_schedule" layoutX="671.0" layoutY="121.0" />
                                  </children>
                               </AnchorPane>
                            </children>

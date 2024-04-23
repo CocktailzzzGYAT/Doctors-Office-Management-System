@@ -305,6 +305,10 @@ public class DoctorMainFormController implements Initializable {
 	private ResultSet result;
 
 	private final AlertMessage alert = new AlertMessage();
+	
+	
+	
+	
 
 	public ObservableList<AppointmentData> dashboardAppointmentTableView() {
 
@@ -592,6 +596,7 @@ public class DoctorMainFormController implements Initializable {
 	public void appointmentInsertBtn() {
 
 //      CHECK IF THE FIELD(S) ARE EMPTY
+		System.out.println(appointment_schedule.getValue());
       if (appointment_appointmentID.getText().isEmpty()
               || appointment_name.getText().isEmpty()
               || appointment_gender.getSelectionModel().getSelectedItem() == null
@@ -665,6 +670,45 @@ public class DoctorMainFormController implements Initializable {
   }
 	
 	
+	public void appointmentDeleteBtn() {
+
+        if (appointment_appointmentID.getText().isEmpty()) {
+            alert.errorMessage("Please select the item first");
+        } else {
+
+            String updateData = "UPDATE appointment SET date_delete = ? WHERE appointment_id = '"
+                    + appointment_appointmentID.getText() + "'";
+
+            connect = Database.connectDB();
+
+            try {
+                java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
+
+                if (alert.confirmationMessage("Are you sure you want to DELETE Appointment ID: "
+                        + appointment_appointmentID.getText() + "?")) {
+                    prepare = connect.prepareStatement(updateData);
+
+                    prepare.setString(1, String.valueOf(sqlDate));
+                    prepare.executeUpdate();
+
+                    appointmentShowData();
+                    appointmentAppointmentID();
+                    appointmentClearBtn();
+
+                    alert.successMessage("Successully Updated!");
+                } else {
+                    alert.errorMessage("Cancelled.");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+	
+	
 	public void appointmentClearBtn() {
         appointment_appointmentID.clear();
         appointment_name.clear();
@@ -699,6 +743,9 @@ public class DoctorMainFormController implements Initializable {
                 tempAppID += 1;
             }
             appointmentID = tempAppID;
+            
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -712,6 +759,8 @@ public class DoctorMainFormController implements Initializable {
 	        appointment_appointmentID.setDisable(true);
 
 	    }
+	 
+	 
 
 	    public void appointmentGenderList() {
 	        List<String> listG = new ArrayList<>();
@@ -724,6 +773,22 @@ public class DoctorMainFormController implements Initializable {
 	        appointment_gender.setItems(listData);
 
 	    }
+	    
+	    
+	    public void appointmentStatusList() {
+	        List<String> listS = new ArrayList<>();
+
+	        for (String data : Data.status) {
+	            listS.add(data);
+	        }
+
+	        ObservableList listData = FXCollections.observableArrayList(listS);
+	        appointment_status.setItems(listData);
+
+	    }
+  
+	    
+	    
 
 	public void runTime() {
 		new Thread() {
@@ -749,9 +814,13 @@ public class DoctorMainFormController implements Initializable {
 		runTime();
 		registerpatientID();
 		
-		
+		appointmentAppointmentID();
 		appointmentShowData();
 		dashboardDisplayData();
+		
+		
+		appointmentGenderList();
+		appointmentStatusList();
 
 	}
 
