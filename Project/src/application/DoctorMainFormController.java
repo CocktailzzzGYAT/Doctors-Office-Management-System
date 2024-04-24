@@ -57,7 +57,7 @@ public class DoctorMainFormController implements Initializable {
 	private TextField appointment_diagnosis;
 
 	@FXML
-	private ComboBox<?> appointment_gender;
+	private ComboBox<String> appointment_gender;
 
 	@FXML
 	private Button appointment_insertBtn;
@@ -69,7 +69,7 @@ public class DoctorMainFormController implements Initializable {
 	private TextField appointment_name;
 
 	@FXML
-	private ComboBox<?> appointment_status;
+	private ComboBox<String> appointment_status;
 
 	@FXML
 	private TextField appointment_treatment;
@@ -429,6 +429,30 @@ public class DoctorMainFormController implements Initializable {
 
 	        appointments_tableView.setItems(AppointmentListData);
 	    }
+	    
+	    
+	    public void appointmentSelect() {
+
+	        AppointmentData appData = appointments_tableView.getSelectionModel().getSelectedItem();
+	        int num = appointments_tableView.getSelectionModel().getSelectedIndex();
+
+	        
+	        if ((num - 1) < -1) {
+	            return;
+	        }
+
+	        appointment_appointmentID.setText("" + appData.getAppointmentID());  
+	        appointment_name.setText(appData.getName());
+	        appointment_gender.getSelectionModel().select(appData.getGender());
+	        appointment_mobileNumber.setText("" + appData.getMobileNumber());
+	        appointment_description.setText(appData.getDescription());
+	        appointment_diagnosis.setText(appData.getDiagnosis());
+	        appointment_treatment.setText(appData.getTreatment());
+	        appointment_address.setText(appData.getAddress());
+	        appointment_status.getSelectionModel().select(appData.getStatus());
+
+	    }
+
 	
 	
 // Mounir Code section ------------
