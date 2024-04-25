@@ -546,6 +546,7 @@ public class DoctorMainFormController implements Initializable {
 
 	public void displayAdminIDNumberName() {
 		String name = Data.doctor_name;
+		System.out.println(name);
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
 
 		nav_username.setText(name);
