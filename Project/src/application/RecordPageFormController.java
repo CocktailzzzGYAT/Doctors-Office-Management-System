@@ -157,32 +157,7 @@ public class RecordPageFormController implements Initializable {
                                 + "    -fx-font-family: Arial;");
 
                         editButton.setOnAction((ActionEvent event) -> {
-                            try {
-
-                                PatientsData pData = recordpage_tableView.getSelectionModel().getSelectedItem();
-                                int num = recordpage_tableView.getSelectionModel().getSelectedIndex();
-
-                                if ((num - 1) < -1) {
-                                    alert.errorMessage("Please select item first");
-                                    return;
-                                }
-
-                                Data.temp_PatientID = pData.getId();
-                                Data.temp_name = pData.getFullName();
-                                Data.temp_gender = pData.getGender();
-                                Data.temp_string = pData.getMobileNumber();
-                                Data.temp_address = pData.getAddress();
-                                Data.temp_status = pData.getStatus();
-                                
-                                Parent root = FXMLLoader.load(getClass().getResource("EditPatientForm.fxml"));
-                                Stage stage = new Stage();
-
-                                stage.setScene(new Scene(root));
-                                stage.show();
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                           
                         });
 
                         removeButton.setOnAction((ActionEvent event) -> {
@@ -233,7 +208,7 @@ public class RecordPageFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TO DISPLAY THE PATIENT'S DATA ONCE THE DOCTOR CLICKED THE RECORD BUTTON
+        
         displayPatientsData();
 
         actionButtons();
