@@ -204,7 +204,7 @@ public class DoctorMainFormController implements Initializable {
 	private AnchorPane patients_form;
 
 	@FXML
-	private ComboBox<?> patients_gender;
+	private ComboBox<String> patients_gender;
 
 	@FXML
 	private TextField patients_mobileNumber;
@@ -307,7 +307,18 @@ public class DoctorMainFormController implements Initializable {
 	private final AlertMessage alert = new AlertMessage();
 	
 	
-	
+	 private void patientGenderList() {
+
+	        List<String> listG = new ArrayList<>();
+
+	        for (String data : Data.gender) {
+	            listG.add(data);
+	        }
+	        ObservableList listData = FXCollections.observableList(listG);
+
+	        patients_gender.setItems(listData);
+
+	    }
 	
 
 	public ObservableList<AppointmentData> dashboardAppointmentTableView() {
@@ -452,6 +463,55 @@ public class DoctorMainFormController implements Initializable {
 	        appointment_status.getSelectionModel().select(appData.getStatus());
 
 	    }
+	    
+	    public void patientClearFields() {
+	        patient_id.clear();
+	        patients_patientName.clear();
+	        patients_age.clear();
+	        patients_gender.getSelectionModel().clearSelection();
+	        patients_mobileNumber.clear();
+	        patients_adress.clear();
+
+	        
+	        patients_PA_dateCreated.setText("");
+	        patients_PI_patientName.setText("");
+	        patients_PI_gender.setText("");
+	        patients_PI_mobileNumber.setText("");
+	        patients_PI_address.setText("");
+	        patients_PI_age.setText("");
+	    }
+	    
+	    
+	    @FXML
+	    private Label patients_PI_age;
+	    
+	    public void patientConfirmBtn() {
+
+	        // CHECK IF SOME OR ALL FIELDS ARE EMPTY
+	        if (patient_id.getText().isEmpty()
+	        		|| patients_age.getText().isEmpty()
+	                || patients_patientName.getText().isEmpty()
+	                || patients_gender.getSelectionModel().getSelectedItem() == null
+	                || patients_mobileNumber.getText().isEmpty()	                
+	                || patients_adress.getText().isEmpty()) {
+	            alert.errorMessage("Please fill all blank fields");
+	        } else {
+	            Date date = new Date();
+	            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+	            
+	            
+	            patients_PA_dateCreated.setText(String.valueOf(sqlDate));
+
+	            // TO DISPLAY THE DATA FROM PERSONAL INFORMATION 
+	            patients_PI_patientName.setText(patients_patientName.getText());
+	            patients_PI_gender.setText(patients_gender.getSelectionModel().getSelectedItem());
+	            patients_PI_mobileNumber.setText(patients_mobileNumber.getText());
+	            patients_PI_address.setText(patients_adress.getText());
+	            patients_PI_age.setText(patients_age.getText());
+	        }
+
+	    }
 
 	
 	
@@ -460,11 +520,16 @@ public class DoctorMainFormController implements Initializable {
 	private TextArea patients_adress;
 	@FXML
 	private TextField patient_id;
+	
+
+    @FXML
+    private TextField patients_age;
 
 	public void register_patient() {
 
 		if (patients_patientName.getText().isEmpty() || patients_mobileNumber.getText().isEmpty()
-				|| patients_adress.getText().isEmpty()) {
+				|| patients_adress.getText().isEmpty() || patients_age.getText().isEmpty()) {
+			
 			alert.errorMessage("All blank fields must be filled");
 		} else {
 			String patient_name = patients_patientName.getText();
@@ -483,17 +548,19 @@ public class DoctorMainFormController implements Initializable {
 
 				} else {
 
-					String insertData = "INSERT INTO patient (patient_name, patient_phone, patient_adress, date) VALUES (?, ?, ?, ?)";
+					String insertData = "INSERT INTO patient (patient_age, patient_name, patient_phone, patient_adress, date) VALUES (?, ?, ?, ?, ?)";
 					java.time.LocalDate currentDate = java.time.LocalDate.now();
 					java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
 
 					prepare = connect.prepareStatement(insertData);
-					prepare.setString(1, patients_patientName.getText());
-					prepare.setString(2, patients_mobileNumber.getText());
-					prepare.setString(3, patients_adress.getText());
-					prepare.setDate(4, sqlDate);
+					prepare.setString(1, patients_age.getText());
+					prepare.setString(2, patients_patientName.getText());
+					prepare.setString(3, patients_mobileNumber.getText());
+					prepare.setString(4, patients_adress.getText());
+					prepare.setDate(5, sqlDate);
 					prepare.executeUpdate();
 					alert.successMessage("Registered Successfully");
+					patientClearFields();
 
 				}
 			} catch (Exception e) {
@@ -846,6 +913,7 @@ public class DoctorMainFormController implements Initializable {
 		
 		appointmentGenderList();
 		appointmentStatusList();
+		patientGenderList();
 
 	}
 
