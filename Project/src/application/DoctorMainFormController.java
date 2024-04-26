@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -298,6 +299,9 @@ public class DoctorMainFormController implements Initializable {
 
 	@FXML
 	private Label top_username;
+	
+	@FXML
+    private DatePicker appointment_schedule;
 
 	private Connection connect;
 	private PreparedStatement prepare;
@@ -704,8 +708,7 @@ public class DoctorMainFormController implements Initializable {
 
     }
 	
-	@FXML
-    private DatePicker appointment_schedule;
+	
 	
 	
 	public void appointmentInsertBtn() {
@@ -936,6 +939,8 @@ public class DoctorMainFormController implements Initializable {
 		appointmentGenderList();
 		appointmentStatusList();
 		patientGenderList();
+		
+		
 
 	}
 

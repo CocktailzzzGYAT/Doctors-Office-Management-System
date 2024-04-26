@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -362,6 +363,9 @@ public class DoctorPageController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		registerDoctorID();
 		userList();
+		
+		
+		
 
 	}
 }

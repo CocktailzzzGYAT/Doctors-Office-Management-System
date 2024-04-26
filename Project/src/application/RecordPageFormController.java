@@ -5,6 +5,7 @@
  */
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -157,7 +158,16 @@ public class RecordPageFormController implements Initializable {
                                 + "    -fx-font-family: Arial;");
 
                         editButton.setOnAction((ActionEvent event) -> {
-                           
+                        	try {
+                                Parent root ;
+                                root = FXMLLoader.load(getClass().getResource("Prescription.fxml"));
+                                Stage stage = new Stage();
+                                stage.setTitle("Doctor's Office | Doctor Main Form");
+                                stage.setScene(new Scene(root));
+                                stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         });
 
                         removeButton.setOnAction((ActionEvent event) -> {
