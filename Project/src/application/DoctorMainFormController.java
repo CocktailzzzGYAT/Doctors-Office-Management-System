@@ -512,6 +512,23 @@ public class DoctorMainFormController implements Initializable {
 	        }
 
 	    }
+	    
+	    
+	    public void patientRecordBtn() {
+	        try {
+	            // LINK THE NAME OF YOUR FXML FOR RECORD PAGE
+	            Parent root = FXMLLoader.load(getClass().getResource("RecordPageForm.fxml"));
+	            Stage stage = new Stage();
+
+	            stage.setTitle("Hospital Management System | Record of Patients");
+	            stage.setScene(new Scene(root));
+	            stage.show();
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
 
 	
 	
@@ -548,16 +565,17 @@ public class DoctorMainFormController implements Initializable {
 
 				} else {
 
-					String insertData = "INSERT INTO patient (patient_age, patient_name, patient_phone, patient_adress, date) VALUES (?, ?, ?, ?, ?)";
+					String insertData = "INSERT INTO patient (patient_age, patient_name,gender, patient_phone, patient_adress, date) VALUES (?, ?, ?, ?, ?, ?)";
 					java.time.LocalDate currentDate = java.time.LocalDate.now();
 					java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
 
 					prepare = connect.prepareStatement(insertData);
 					prepare.setString(1, patients_age.getText());
 					prepare.setString(2, patients_patientName.getText());
-					prepare.setString(3, patients_mobileNumber.getText());
-					prepare.setString(4, patients_adress.getText());
-					prepare.setDate(5, sqlDate);
+					prepare.setString(3, patients_gender.getSelectionModel().getSelectedItem());
+					prepare.setString(4, patients_mobileNumber.getText());
+					prepare.setString(5, patients_adress.getText());
+					prepare.setDate(6, sqlDate);
 					prepare.executeUpdate();
 					alert.successMessage("Registered Successfully");
 					patientClearFields();

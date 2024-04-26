@@ -427,7 +427,7 @@
                                           <FontAwesomeIcon fill="WHITE" glyphName="PLUS" text="" />
                                        </graphic>
                                     </Button>
-                                    <Button fx:id="patients_PI_recordBtn" layoutX="158.0" layoutY="498.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="91.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Record">
+                                    <Button fx:id="patients_PI_recordBtn" layoutX="158.0" layoutY="498.0" mnemonicParsing="false" onAction="#patientRecordBtn" prefHeight="32.0" prefWidth="91.0" styleClass="btn-2" stylesheets="@DoctorMainFormDesign.css" text="Record">
                                        <graphic>
                                           <FontAwesomeIcon fill="WHITE" glyphName="CLIPBOARD" />
                                        </graphic>
