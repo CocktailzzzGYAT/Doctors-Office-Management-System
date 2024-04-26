@@ -552,6 +552,7 @@ public class DoctorMainFormController implements Initializable {
 			String patient_name = patients_patientName.getText();
 			String patient_phone = patients_mobileNumber.getText();
 			String patient_adress = patients_adress.getText();
+			
 
 			String checkid = "SELECT * FROM patient WHERE patient_name = ?";
 			connect = Database.connectDB();
@@ -564,8 +565,11 @@ public class DoctorMainFormController implements Initializable {
 					alert.errorMessage(patient_name + " Already exists!");
 
 				} else {
+					String getSpecialized = "";
+	                  String getDoctorData = "SELECT * FROM doctor WHERE doctor_id = '"
+	                          + Data.doctor_id + "'";
 
-					String insertData = "INSERT INTO patient (patient_age, patient_name,gender, patient_phone, patient_adress, date) VALUES (?, ?, ?, ?, ?, ?)";
+					String insertData = "INSERT INTO patient (patient_age, patient_name,gender, patient_phone, doctor, patient_adress, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 					java.time.LocalDate currentDate = java.time.LocalDate.now();
 					java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
 
@@ -574,8 +578,9 @@ public class DoctorMainFormController implements Initializable {
 					prepare.setString(2, patients_patientName.getText());
 					prepare.setString(3, patients_gender.getSelectionModel().getSelectedItem());
 					prepare.setString(4, patients_mobileNumber.getText());
-					prepare.setString(5, patients_adress.getText());
-					prepare.setDate(6, sqlDate);
+					prepare.setString(5, Data.doctor_id);
+					prepare.setString(6, patients_adress.getText());
+					prepare.setDate(7, sqlDate);
 					prepare.executeUpdate();
 					alert.successMessage("Registered Successfully");
 					patientClearFields();
@@ -705,8 +710,7 @@ public class DoctorMainFormController implements Initializable {
 	
 	public void appointmentInsertBtn() {
 
-//      CHECK IF THE FIELD(S) ARE EMPTY
-		System.out.println(appointment_schedule.getValue());
+
       if (appointment_appointmentID.getText().isEmpty()
               || appointment_name.getText().isEmpty()
               || appointment_gender.getSelectionModel().getSelectedItem() == null

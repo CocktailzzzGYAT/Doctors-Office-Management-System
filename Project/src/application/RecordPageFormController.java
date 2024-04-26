@@ -85,7 +85,7 @@ public class RecordPageFormController implements Initializable {
     public ObservableList<PatientsData> getPatientRecordData() {
 
         ObservableList<PatientsData> listData = FXCollections.observableArrayList();
-// RESTART RECORD PAGEFORM FXML IF YOU DIDNT SEE THE RECORDPAGEFORMCONTROLLER CLASS
+
         String selectData = "SELECT * FROM patient WHERE date_delete IS NULL AND doctor = '"
                 + Data.doctor_id + "'";
         connect = Database.connectDB();
@@ -95,9 +95,7 @@ public class RecordPageFormController implements Initializable {
             result = prepare.executeQuery();
 
             PatientsData pData;
-//            PatientsData(Integer id, Integer patientID, String fullName, 
-//            Long mobileNumber, String address, Date date
-//            , Date dateModify, Date dateDelete)
+
             while (result.next()) {
                 pData = new PatientsData(result.getInt("id"),
                         result.getString("patient_name"), result.getString("gender"), result.getString("patient_phone"),
@@ -169,13 +167,13 @@ public class RecordPageFormController implements Initializable {
                                     return;
                                 }
 
-                                Data.temp_PatientID = pData.getPatientID();
+                                Data.temp_PatientID = pData.getId();
                                 Data.temp_name = pData.getFullName();
                                 Data.temp_gender = pData.getGender();
                                 Data.temp_string = pData.getMobileNumber();
                                 Data.temp_address = pData.getAddress();
                                 Data.temp_status = pData.getStatus();
-                                // NOW LETS CREATE FXML FOR EDIT PATIENT FORM
+                                
                                 Parent root = FXMLLoader.load(getClass().getResource("EditPatientForm.fxml"));
                                 Stage stage = new Stage();
 
@@ -196,11 +194,11 @@ public class RecordPageFormController implements Initializable {
                                 return;
                             }
 
-                            String deleteData = "UPDATE patient SET date_delete = ? WHERE patient_id = "
-                                    + pData.getPatientID();
+                            String deleteData = "UPDATE patient SET date_delete = ? WHERE id = "
+                                    + pData.getId();
 
                             try {
-                                if (alert.confirmationMessage("Are you sure you want to delete Patient ID: " + pData.getPatientID() + "?")) {
+                                if (alert.confirmationMessage("Are you sure you want to delete Patient ID: " + pData.getId() + "?")) {
                                     prepare = connect.prepareStatement(deleteData);
                                     Date date = new Date();
                                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
