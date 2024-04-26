@@ -22,11 +22,11 @@
             </ImageView>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Label layoutX="100.0" layoutY="169.0" text="Label" />
-                  <Label layoutX="44.0" layoutY="187.0" text="Label" />
-                  <Label layoutX="271.0" layoutY="71.0" prefHeight="17.0" prefWidth="56.0" text="Label" />
-                  <Label layoutX="27.0" layoutY="16.0" text="Label" />
-                  <Label layoutX="54.0" layoutY="31.0" text="Label" />
+                  <Label fx:id="name" layoutX="100.0" layoutY="169.0" text="Label" />
+                  <Label fx:id="age" layoutX="44.0" layoutY="187.0" text="Label" />
+                  <Label fx:id="Date" layoutX="270.0" layoutY="71.0" prefHeight="17.0" prefWidth="102.0" text="Label" />
+                  <Label fx:id="doctor" layoutX="27.0" layoutY="16.0" text="Label" />
+                  <Label fx:id="doctor_s" layoutX="54.0" layoutY="31.0" text="Label" />
                   <Label fx:id="MED1" layoutX="22.0" layoutY="300.0" text="Label">
                      <font>
                         <Font name="System Bold" size="14.0" />
