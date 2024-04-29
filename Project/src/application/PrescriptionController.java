@@ -16,6 +16,7 @@ import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
@@ -47,10 +48,15 @@ public class PrescriptionController implements Initializable{
     private StackPane panelToprint;
     
     @FXML
+    private TextArea TRT;
+    
+    @FXML
     private void ConfirmBtn() {
     	MED1.setText(MED1TXT.getText());
     	MED2.setText(MED2TXT.getText());
     	MED3.setText(MED3TXT.getText());
+    	TREATMENT.setText(TRT.getText());
+    	
     }
     
     
@@ -111,9 +117,10 @@ public class PrescriptionController implements Initializable{
                 String temp_doctorSpecialized = result.getString("specialized");
                 this.doctor.setText(Data.doctor_name);
                 this.doctor_s.setText(temp_doctorSpecialized);
-                this.age.setText(PatientsData.age);
+ //               this.age.setText(PatientsData.age);
                 this.Date.setText(format.format(new java.util.Date()));
-                this.name.setText(PatientsData.fullName);
+                
+//                this.name.setText(PatientsData.fullName);
             }
         } catch (SQLException e) {
             e.printStackTrace();

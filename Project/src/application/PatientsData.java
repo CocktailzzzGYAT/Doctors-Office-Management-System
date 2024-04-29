@@ -16,7 +16,7 @@ public class PatientsData {
     private Integer id;
     private Integer patientID;
     private String password;
-    public static String fullName;
+    private String fullName;
     private String mobileNumber;
     private String address;
     private String image;
@@ -24,13 +24,13 @@ public class PatientsData {
     private String diagnosis;
     private String treatment;
     private String doctor;
-    private static String specialized;
-    private static String gender;
-    private static Date date;
-    private static Date dateModify;
-    private static Date dateDelete;
-    private static String status;
-    public static String age;
+    private String specialized;
+    private String gender;
+    private Date date;
+    private Date dateModify;
+    private Date dateDelete;
+    private String status;
+    private String age;
     
     public PatientsData(Integer id, Integer patientID, String password, String fullName, String mobileNumber
             , String gender, String address, String image, String description, String diagnosis, String treatment

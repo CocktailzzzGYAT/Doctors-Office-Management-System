@@ -46,7 +46,7 @@ public class RecordPageFormController implements Initializable {
     private TextField recordpage_search;
 
     @FXML
-    private TableView<PatientsData> recordpage_tableView;
+	protected TableView<PatientsData> recordpage_tableView;
 
     @FXML
     private TableColumn<PatientsData, String> recordpage_col_patientID;
@@ -142,10 +142,10 @@ public class RecordPageFormController implements Initializable {
                         setGraphic(null);
                         setText(null);
                     } else {
-                        Button editButton = new Button("Edit");
+                        Button printButton = new Button("Print");
                         Button removeButton = new Button("Delete");
 
-                        editButton.setStyle("-fx-background-color: linear-gradient(to bottom right, #a413a1, #64308e);\n"
+                        printButton.setStyle("-fx-background-color: linear-gradient(to bottom right, #a413a1, #64308e);\n"
                                 + "    -fx-cursor: hand;\n"
                                 + "    -fx-text-fill: #fff;\n"
                                 + "    -fx-font-size: 14px;\n"
@@ -157,7 +157,7 @@ public class RecordPageFormController implements Initializable {
                                 + "    -fx-font-size: 14px;\n"
                                 + "    -fx-font-family: Arial;");
 
-                        editButton.setOnAction((ActionEvent event) -> {
+                        printButton.setOnAction((ActionEvent event) -> {
                         	try {
                                 Parent root ;
                                 root = FXMLLoader.load(getClass().getResource("Prescription.fxml"));
@@ -200,7 +200,7 @@ public class RecordPageFormController implements Initializable {
                             }
                         });
 
-                        HBox manageBtn = new HBox(editButton, removeButton);
+                        HBox manageBtn = new HBox(printButton, removeButton);
                         manageBtn.setAlignment(Pos.CENTER);
                         manageBtn.setSpacing(5);
                         setGraphic(manageBtn);
