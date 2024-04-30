@@ -254,51 +254,65 @@ public class DoctorMainFormController implements Initializable {
 
 	@FXML
 	private TableView<?> payment_tableView;
+//----------------------------------------------------
+	
+    @FXML
+    private TextArea profile_address;
 
-	@FXML
-	private TextField profile_adminID;
+    @FXML
+    private Button profile_btn;
 
-	@FXML
-	private Button profile_btn;
+    @FXML
+    private Circle profile_circleImage;
 
-	@FXML
-	private Circle profile_circle;
+    @FXML
+    private TextField profile_doctorID;
 
-	@FXML
-	private TextField profile_email;
+    @FXML
+    private TextField profile_email;
 
-	@FXML
-	private AnchorPane profile_form;
+    @FXML
+    private AnchorPane profile_form;
 
-	@FXML
-	private Button profile_importBtn;
+    @FXML
+    private ComboBox<String> profile_gender;
 
-	@FXML
-	private Label profile_label_adminIO;
+    @FXML
+    private Button profile_importBtn;
 
-	@FXML
-	private Label profile_label_dateCreated;
+    @FXML
+    private Label profile_label_dateCreated;
 
-	@FXML
-	private Label profile_label_email;
+    @FXML
+    private Label profile_label_doctorID;
 
-	@FXML
-	private Label profile_label_name;
+    @FXML
+    private Label profile_label_email;
 
-	@FXML
-	private ComboBox<?> profile_status;
+    @FXML
+    private Label profile_label_name;
 
-	@FXML
-	private Button profile_updateBtn;
+    @FXML
+    private TextField profile_mobileNumber;
 
-	@FXML
-	private TextField profile_username;
+    @FXML
+    private TextField profile_name;
 
-	@FXML
-	private Circle top_profile;
+    @FXML
+    private ComboBox<String> profile_specialized;
 
-	@FXML
-	private Label top_username;
+    @FXML
+    private ComboBox<String> profile_status;
+
+    @FXML
+    private Button profile_updateBtn;
+
+    @FXML
+    private Circle top_profile;
+
+    @FXML
+    private Label top_username;
+
 	
 	@FXML
     private DatePicker appointment_schedule;
@@ -637,7 +651,93 @@ public class DoctorMainFormController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void profileLabels() {
+        String selectData = "SELECT * FROM doctor WHERE doctor_id = '"
+                + Data.doctor_id + "'";
+        connect = Database.connectDB();
+    
+        try {
+            prepare = connect.prepareStatement(selectData);
+            result = prepare.executeQuery();
 
+            if (result.next()) {
+                profile_label_doctorID.setText(result.getString("doctor_id"));
+                profile_label_name.setText(result.getString("full_name"));
+                profile_label_email.setText(result.getString("email"));
+                profile_label_dateCreated.setText(result.getString("date"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
+	public void profileFields() {
+        String selectData = "SELECT * FROM doctor WHERE doctor_id = '"
+                + Data.doctor_id + "'";
+
+        connect = Database.connectDB();
+        try {
+            prepare = connect.prepareStatement(selectData);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                profile_doctorID.setText(result.getString("doctor_id"));
+                profile_name.setText(result.getString("full_name"));
+                profile_email.setText(result.getString("email"));
+                profile_gender.getSelectionModel().select(result.getString("gender"));
+                profile_mobileNumber.setText(result.getString("mobile_number"));
+                profile_address.setText(result.getString("address"));
+                profile_specialized.getSelectionModel().select(result.getString("specialized"));
+                profile_status.getSelectionModel().select(result.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+	
+	
+	public void profileGenderList() {
+
+        List<String> listG = new ArrayList<>();
+
+        for (String data : Data.gender) {
+            listG.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listG);
+        profile_gender.setItems(listData);
+
+    }
+
+    private String[] specialization = {"Allergist", "Dermatologist", "Ophthalmologist", "Gynecologist", "Cardiologist"};
+
+    public void profileSpecializedList() {
+
+        List<String> listS = new ArrayList<>();
+
+        for (String data : specialization) {
+            listS.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listS);
+        profile_specialized.setItems(listData);
+    }
+
+    public void profileStatusList() {
+
+        List<String> listS = new ArrayList<>();
+
+        for (String data : Data.status) {
+            listS.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listS);
+        profile_status.setItems(listData);
+    }
 	public void displayAdminIDNumberName() {
 		String name = Data.doctor_name;
 		System.out.println(name);
@@ -941,6 +1041,11 @@ public class DoctorMainFormController implements Initializable {
 		patientGenderList();
 		
 		
+		profileSpecializedList();
+		profileGenderList();
+		profileStatusList();
+		profileFields();
+		profileLabels();
 
 	}
 

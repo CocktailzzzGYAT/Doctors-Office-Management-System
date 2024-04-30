@@ -20,8 +20,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
+import application.PatientsData;
+import application.PatientsData;// Import the PatientsData class
 
-public class PrescriptionController implements Initializable{
+
+public class PrescriptionController extends RecordPageFormController implements Initializable{
 
     @FXML
     private Label MED1;
@@ -96,31 +99,43 @@ public class PrescriptionController implements Initializable{
 
     @FXML
     private Label doctor_s;
+    
+    private PatientsData patientsData;
+
+    public void setPatientsData(PatientsData pData) {
+        this.patientsData = pData;
+    }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        Set_P();
+    	
+    Set_P();	
     }
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
+    
     public void Set_P() {
         String sql = "SELECT specialized FROM doctor WHERE doctor_id = ?";
         connect = Database.connectDB();
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        
+        
 
         try {
             prepare = connect.prepareStatement(sql);
             prepare.setString(1, Data.doctor_id);
             result = prepare.executeQuery();
+            
+            
             if (result.next()) { // Move the cursor to the first row
+  
                 String temp_doctorSpecialized = result.getString("specialized");
                 this.doctor.setText(Data.doctor_name);
                 this.doctor_s.setText(temp_doctorSpecialized);
- //               this.age.setText(PatientsData.age);
-                this.Date.setText(format.format(new java.util.Date()));
-                
-//                this.name.setText(PatientsData.fullName);
+              this.age.setText(patientsData.age);
+                this.Date.setText(format.format(new java.util.Date()));               
+              this.name.setText(patientsData.fullName);
             }
         } catch (SQLException e) {
             e.printStackTrace();

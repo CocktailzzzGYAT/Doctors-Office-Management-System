@@ -16,7 +16,7 @@ public class PatientsData {
     private Integer id;
     private Integer patientID;
     private String password;
-    private String fullName;
+    public String fullName;
     private String mobileNumber;
     private String address;
     private String image;
@@ -30,7 +30,7 @@ public class PatientsData {
     private Date dateModify;
     private Date dateDelete;
     private String status;
-    private String age;
+    public String age;
     
     public PatientsData(Integer id, Integer patientID, String password, String fullName, String mobileNumber
             , String gender, String address, String image, String description, String diagnosis, String treatment
@@ -73,6 +73,12 @@ public class PatientsData {
         this.dateModify = dateModify;
         this.dateDelete = dateDelete;
     }
+    
+    public PatientsData(String fullName, String age ) {
+    	this.fullName = fullName;
+    	this.age = age;
+    }
+    
     
     public PatientsData(Integer id, Integer patientID, String fullName, String gender
             , String description, String diagnosis, String treatment
