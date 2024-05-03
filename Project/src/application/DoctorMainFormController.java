@@ -35,6 +35,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class DoctorMainFormController implements Initializable {
@@ -118,7 +119,7 @@ public class DoctorMainFormController implements Initializable {
 	private TableView<AppointmentData> appointments_tableView;
 
 	@FXML
-	private Label current_form;
+	private Text current_form;
 
 	@FXML
 	private BarChart<?, ?> dashboad_chart_DD;
@@ -160,7 +161,7 @@ public class DoctorMainFormController implements Initializable {
 	private Label dashboard_tA;
 
 	@FXML
-	private Label date_time;
+	private Text date_time;
 
 	@FXML
 	private Button logout_btn;
@@ -754,21 +755,25 @@ public class DoctorMainFormController implements Initializable {
 			patients_form.setVisible(false);
 			appointments_form.setVisible(false);
 			profile_form.setVisible(false);
+			current_form.setText("DASHBOARD");
 		} else if (event.getSource() == patients_btn) {
 			dashboard_form.setVisible(false);
 			patients_form.setVisible(true);
 			appointments_form.setVisible(false);
 			profile_form.setVisible(false);
+			current_form.setText("PATIENTS");
 		} else if (event.getSource() == appointments_btn) {
 			dashboard_form.setVisible(false);
 			patients_form.setVisible(false);
 			appointments_form.setVisible(true);
 			profile_form.setVisible(false);
+			current_form.setText("APPOINTMENTS");
 		} else if (event.getSource() == profile_btn) {
 			dashboard_form.setVisible(false);
 			patients_form.setVisible(false);
 			appointments_form.setVisible(false);
 			profile_form.setVisible(true);
+			current_form.setText("PROFILE");
 		}
 	}
 	
@@ -885,6 +890,35 @@ public class DoctorMainFormController implements Initializable {
       }
 
   }
+	
+	// Mounir
+	
+	public void updateprofile() {
+        String selectData = "SELECT * FROM doctor WHERE doctor_id = '" + Data.doctor_id + "'";
+        connect = Database.connectDB();
+
+        try {
+            prepare = connect.prepareStatement(selectData);
+            result = prepare.executeQuery();
+                    String updataData = "UPDATE doctor set full_name=?,gender=?,email=?,mobile_number=?,address=?,specialized=?,status=? WHERE doctor_id = '" + Data.doctor_id + "'";
+                    prepare = connect.prepareStatement(updataData);
+                    prepare.setString(1, profile_name.getText());
+                    prepare.setString(2, profile_gender.getSelectionModel().getSelectedItem());
+                    prepare.setString(3, profile_email.getText());
+                    prepare.setString(4, profile_mobileNumber.getText());
+                    prepare.setString(5, profile_address.getText());
+                    prepare.setString(6, profile_specialized.getSelectionModel().getSelectedItem());
+                    prepare.setString(7, profile_status.getSelectionModel().getSelectedItem());
+                    prepare.executeUpdate();
+                    profile_label_name.setText(profile_name.getText());
+                    profile_label_email.setText(profile_email.getText());
+                    nav_username.setText(profile_name.getText());
+                    alert.successMessage("registered successfully!");
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+    }
 	
 	
 	public void appointmentDeleteBtn() {
@@ -1024,9 +1058,53 @@ public class DoctorMainFormController implements Initializable {
 			}
 		}.start();
 	}
+	
+	
+	public void dashbboardDisplayTP() {
+		String sql = "SELECT COUNT(id) FROM patient WHERE doctor = '" + Data.doctor_id + "' AND date_delete IS NULL";
+
+        connect = Database.connectDB();
+        int getTP = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                getTP = result.getInt("COUNT(id)");
+            }
+            dashboard_TP.setText(String.valueOf(getTP));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
+	public void dashbboardDisplayTA() {
+		String sql = "SELECT COUNT(id) FROM appointment WHERE status = 'Active' AND doctor = '" + Data.doctor_id + "' AND date_delete IS NULL";
+
+        connect = Database.connectDB();
+        int getTA = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                getTA = result.getInt("COUNT(id)");
+            }
+            dashboard_tA.setText(String.valueOf(getTA));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+	@FXML
+	private Text Quote;
+	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		Quote.setText("\"The art of medicine consists in amusing the patient while nature cures the disease.\" - Voltaire");
 		displayAdminIDNumberName();
 		runTime();
 		registerpatientID();
@@ -1039,6 +1117,10 @@ public class DoctorMainFormController implements Initializable {
 		appointmentGenderList();
 		appointmentStatusList();
 		patientGenderList();
+		
+		
+		dashbboardDisplayTA();
+		dashbboardDisplayTP();
 		
 		
 		profileSpecializedList();

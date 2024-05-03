@@ -33,8 +33,8 @@ font-face {
 
 .nav-btn-2{
     -fx-background-color: transparent;
-    -fx-border-color: #fff;
-    -fx-border-width: .5px;
+    -fx-border: none;
+    
     -fx-text-fill: #fff;
     -fx-font-family: 'Montserrat', sans-serif;
     
@@ -45,6 +45,10 @@ font-face {
 .nav-btn-2:hover{
     -fx-background-color: #fff;
     -fx-text-fill: #000;
+}
+
+.icon-hover:hover {
+    -fx-fill: black; /* Change the color to red on hover */
 }
 
 .table-view{
@@ -76,6 +80,29 @@ font-face {
 }
 .btn-2:hover{
     -fx-background-color: linear-gradient(to right, #5c6bc0, #512da8);
+}
+
+.text{
+	-fx-font-family: 'Montserrat', sans-serif;
+	-fx-font-size: 13px;
+}
+
+.text-2{
+	
+	-fx-font-family: 'Montserrat', sans-serif;
+	-fx-font-style: italic;
+	-fx-font-weight: 600;
+	-fx-font-size: 22px;
+}
+
+.text-3{
+	-fx-font-family: 'Montserrat', sans-serif;
+	-fx-font-size: 23px;
+	
+}
+
+.label-size {
+    -fx-font-size: 16px; /* Adjust the font size as needed */
 }
 
 .textfield-2{
