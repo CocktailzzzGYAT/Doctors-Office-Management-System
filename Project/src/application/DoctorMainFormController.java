@@ -602,6 +602,7 @@ public class DoctorMainFormController implements Initializable {
 					prepare.setDate(7, sqlDate);
 					prepare.executeUpdate();
 					alert.successMessage("Registered Successfully");
+					
 					patientClearFields();
 
 				}
@@ -1047,12 +1048,15 @@ public class DoctorMainFormController implements Initializable {
 				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 				while (true) {
 					try {
-						Thread.sleep(1);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					Platform.runLater(() -> {
 						date_time.setText(format.format(new Date()));
+						dashbboardDisplayTA();
+						dashbboardDisplayTP();
+						
 					});
 				}
 			}
@@ -1119,8 +1123,7 @@ public class DoctorMainFormController implements Initializable {
 		patientGenderList();
 		
 		
-		dashbboardDisplayTA();
-		dashbboardDisplayTP();
+		
 		
 		
 		profileSpecializedList();
