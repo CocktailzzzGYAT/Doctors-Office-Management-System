@@ -345,17 +345,7 @@ public class MainSceneController implements Initializable {
 	            //appointmentDisplayData();
 
 	            current_form.setText("Appointment's Form");
-	        } else if (event.getSource() == payment_btn) {
-	            dashboard_form.setVisible(false);
-	            doctors_form.setVisible(false);
-	            patients_form.setVisible(false);
-	            appointments_form.setVisible(false);
-	            payment_form.setVisible(true);
-	            profile_form.setVisible(false);
-
-	            //paymentDisplayData();
-
-	            current_form.setText("Payment Form");
+	         
 	        } else if (event.getSource() == profile_btn) {
 	            dashboard_form.setVisible(false);
 	            doctors_form.setVisible(false);

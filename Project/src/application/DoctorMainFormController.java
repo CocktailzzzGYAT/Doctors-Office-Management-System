@@ -149,7 +149,7 @@ public class DoctorMainFormController implements Initializable {
 	private Label dashboard_AP;
 
 	@FXML
-	private Label dashboard_TP;
+	protected Label dashboard_TP;
 
 	@FXML
 	private Button dashboard_btn;
@@ -356,7 +356,7 @@ public class DoctorMainFormController implements Initializable {
 
             AppointmentData aData;
             
-            while (result.next()) {System.out.println("gyatblyat");
+            while (result.next()) {
                 aData = new AppointmentData(result.getInt("appointment_id"),
                         result.getString("name"), result.getString("description"),
                         result.getDate("date"), result.getString("status"));
@@ -444,7 +444,7 @@ public class DoctorMainFormController implements Initializable {
 	        AppointmentListData = appointmentGetData();
 
 	        
-	        System.out.println("Number of appointments retrieved: " + AppointmentListData.size());
+	        System.out.println("Number of appointments retrieved: " + AppointmentListData.size());                                // Onga bonga
 	        
 	        
 	        appointments_appointmentID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
@@ -568,7 +568,7 @@ public class DoctorMainFormController implements Initializable {
 			
 			alert.errorMessage("All blank fields must be filled");
 		} else {
-			String patient_name = patients_patientName.getText();
+			String patient_name = patients_patientName.getText(); // = hh
 			String patient_phone = patients_mobileNumber.getText();
 			String patient_adress = patients_adress.getText();
 			
@@ -585,7 +585,7 @@ public class DoctorMainFormController implements Initializable {
 
 				} else {
 					String getSpecialized = "";
-	                  String getDoctorData = "SELECT * FROM doctor WHERE doctor_id = '"
+	                String getDoctorData = "SELECT * FROM doctor WHERE doctor_id = '"
 	                          + Data.doctor_id + "'";
 
 					String insertData = "INSERT INTO patient (patient_age, patient_name,gender, patient_phone, doctor, patient_adress, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -602,6 +602,7 @@ public class DoctorMainFormController implements Initializable {
 					prepare.setDate(7, sqlDate);
 					prepare.executeUpdate();
 					alert.successMessage("Registered Successfully");
+					dashbboardDisplayTP();
 					
 					patientClearFields();
 
@@ -756,6 +757,7 @@ public class DoctorMainFormController implements Initializable {
 			patients_form.setVisible(false);
 			appointments_form.setVisible(false);
 			profile_form.setVisible(false);
+			dashbboardDisplayTP();
 			current_form.setText("DASHBOARD");
 		} else if (event.getSource() == patients_btn) {
 			dashboard_form.setVisible(false);
@@ -880,6 +882,7 @@ public class DoctorMainFormController implements Initializable {
                   appointmentAppointmentID();
                   appointmentClearBtn();
                   alert.successMessage("Successully added!");
+                  dashbboardDisplayTA();
 
               }
               
@@ -948,6 +951,7 @@ public class DoctorMainFormController implements Initializable {
                     appointmentClearBtn();
 
                     alert.successMessage("Successully Updated!");
+                    dashbboardDisplayTA();
                 } else {
                     alert.errorMessage("Cancelled.");
                 }
@@ -1054,8 +1058,7 @@ public class DoctorMainFormController implements Initializable {
 					}
 					Platform.runLater(() -> {
 						date_time.setText(format.format(new Date()));
-						dashbboardDisplayTA();
-						dashbboardDisplayTP();
+						
 						
 					});
 				}
@@ -1064,11 +1067,13 @@ public class DoctorMainFormController implements Initializable {
 	}
 	
 	
+	public static int deletion = 0;
+	
 	public void dashbboardDisplayTP() {
 		String sql = "SELECT COUNT(id) FROM patient WHERE doctor = '" + Data.doctor_id + "' AND date_delete IS NULL";
-
+		int getTP=0;
         connect = Database.connectDB();
-        int getTP = 0;
+        
         try {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
@@ -1077,10 +1082,16 @@ public class DoctorMainFormController implements Initializable {
                 getTP = result.getInt("COUNT(id)");
             }
             dashboard_TP.setText(String.valueOf(getTP));
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
     }
+	
+	
+	
+	
 	
 	
 	public void dashbboardDisplayTA() {
@@ -1100,6 +1111,9 @@ public class DoctorMainFormController implements Initializable {
             e.printStackTrace();
         }
     }
+	
+	boolean yoink = true;
+	
 	
 	@FXML
 	private Text Quote;
@@ -1123,7 +1137,8 @@ public class DoctorMainFormController implements Initializable {
 		patientGenderList();
 		
 		
-		
+		dashbboardDisplayTA();
+		dashbboardDisplayTP();
 		
 		
 		profileSpecializedList();
@@ -1131,6 +1146,8 @@ public class DoctorMainFormController implements Initializable {
 		profileStatusList();
 		profileFields();
 		profileLabels();
+		
+		
 
 	}
 

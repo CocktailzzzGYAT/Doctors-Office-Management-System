@@ -37,7 +37,7 @@ import javafx.util.Callback;
  *
  * @author WINDOWS 10
  */
-public class RecordPageFormController implements Initializable {
+public class RecordPageFormController extends DoctorMainFormController implements Initializable {
 
 	@FXML
 	private AnchorPane recordpage_mainForm;
@@ -80,6 +80,7 @@ public class RecordPageFormController implements Initializable {
 	private PreparedStatement prepare;
 	private ResultSet result;
 	private Statement statement;
+	
 
 	AlertMessage alert = new AlertMessage();
 
@@ -131,7 +132,7 @@ public class RecordPageFormController implements Initializable {
 	
 
 	public void actionButtons() {
-
+        
 		connect = Database.connectDB();
 		patientRecordData = getPatientRecordData();
 
@@ -216,7 +217,12 @@ public class RecordPageFormController implements Initializable {
 									prepare.executeUpdate();
 
 									alert.successMessage("Deleted Successfully!");
-
+									
+									
+									// Missing method to update dashboard Patients count
+									
+									
+									
 									displayPatientsData();
 								}
 							} catch (Exception e) {
