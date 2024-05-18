@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,19 +11,31 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import application.AlertMessage;
 
 public class MainSceneController implements Initializable {
 	
@@ -114,7 +127,7 @@ public class MainSceneController implements Initializable {
 	    private Button doctors_btn;
 
 	    @FXML
-	    private TableColumn<?, ?> doctors_col_action;
+	    private TableColumn<Data, String> doctors_col_action;
 
 	    @FXML
 	    private TableColumn<?, ?> doctors_col_address;
@@ -123,7 +136,7 @@ public class MainSceneController implements Initializable {
 	    private TableColumn<?, ?> doctors_col_contactNumber;
 
 	    @FXML
-	    private TableColumn<?, ?> doctors_col_doctorID;
+	    private TableColumn<Data, String> doctors_col_doctorID;
 
 	    @FXML
 	    private TableColumn<?, ?> doctors_col_email;
@@ -132,7 +145,7 @@ public class MainSceneController implements Initializable {
 	    private TableColumn<?, ?> doctors_col_gender;
 
 	    @FXML
-	    private TableColumn<?, ?> doctors_col_name;
+	    private TableColumn<Data, String> doctors_col_name;
 
 	    @FXML
 	    private TableColumn<?, ?> doctors_col_specialization;
@@ -144,7 +157,7 @@ public class MainSceneController implements Initializable {
 	    private AnchorPane doctors_form;
 
 	    @FXML
-	    private TableView<?> doctors_tableView;
+	    private TableView<Data> doctors_tableView;
 
 	    @FXML
 	    private Button logout_btn;
@@ -281,6 +294,9 @@ public class MainSceneController implements Initializable {
 	    @FXML
 	    private TextField profile_username;
 
+	   
+	
+
 	    @FXML
 	    private Circle top_profile;
 
@@ -292,8 +308,147 @@ public class MainSceneController implements Initializable {
 	    private Statement statement;
 	    private ResultSet result;
 	    
+	    private final AlertMessage alert = new AlertMessage();
 	    
-	    
+	    public ObservableList<Data> dashboarddoctorTableView() {
+	        ObservableList<Data> listData = FXCollections.observableArrayList();
+	        String sql = "SELECT * FROM doctor";
+	        connect = Database.connectDB();
+	        try {
+
+	            prepare = connect.prepareStatement(sql);
+	           
+	            result = prepare.executeQuery();
+
+	            Data dData;
+	            
+	            while (result.next()) {
+	                dData = new Data(result.getString("doctor_id"),
+	                		result.getString("full_name"), 
+	                		result.getString("password"),
+	                		result.getString("email"),
+	                		result.getString("gender"), 
+	                		result.getString("mobile_number"),
+	                		result.getString("specialized"),
+	                		result.getString("address"), 
+	                		result.getString("status") 
+	            			);
+	                listData.add(dData);
+	            }
+	            int count = listData.size();
+	            System.out.println("Number of elements in the list: " + count);
+	            
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return listData;
+	    }
+		
+	    @FXML
+	    private TableColumn<Data, String> dashboad_col_doctor_id;
+	    @FXML
+	    private TableColumn<Data, String> dashboad_col_specialization;
+		private ObservableList<Data> dashboardGetData;
+		
+		public void dashboardDisplayData_doctor() {
+		    dashboardGetData = dashboarddoctorTableView();
+		    doctors_col_doctorID.setCellValueFactory(new PropertyValueFactory<>("id_d"));
+		    doctors_col_name.setCellValueFactory(new PropertyValueFactory<>("name_d"));
+		    doctors_col_gender.setCellValueFactory(new PropertyValueFactory<>("gender_d"));
+		    doctors_col_contactNumber.setCellValueFactory(new PropertyValueFactory<>("number_d"));
+		    doctors_col_email.setCellValueFactory(new PropertyValueFactory<>("email_d"));
+		    doctors_col_specialization.setCellValueFactory(new PropertyValueFactory<>("specialization_d"));
+		    doctors_col_address.setCellValueFactory(new PropertyValueFactory<>("address_d"));
+		    doctors_col_status.setCellValueFactory(new PropertyValueFactory<>("status_d"));
+		    doctors_tableView.setItems(dashboardGetData);
+		}
+		protected ObservableList<Data> doctorData;
+		public void actionButtons() {
+		    connect = Database.connectDB();
+		    doctorData = dashboarddoctorTableView();
+
+		    Callback<TableColumn<Data, String>, TableCell<Data, String>> celle = (
+		            TableColumn<Data, String> param) -> {
+		            	final TableCell<Data, String> cell = new TableCell<Data, String>() {
+		            public void updateItem(String item, boolean empty) {
+		                super.updateItem(item, empty);
+
+		                if (empty) {
+		                    setGraphic(null);
+		                    setText(null);
+		                } else {
+		                    Button confirmButton = new Button("Confirm");
+		                    Button declineButton = new Button("Decline");
+		                    confirmButton
+							.setStyle("-fx-background-color: #306090;\n"
+									+ "    -fx-cursor: hand;\n" + "    -fx-text-fill: #fff;\n"
+									+ "    -fx-font-size: 14px;\n" + "    -fx-font-family: Arial;");
+
+		                    declineButton
+							.setStyle("-fx-background-color: #306090;\n"
+									+ "    -fx-cursor: hand;\n" + "    -fx-text-fill: #fff;\n"
+									+ "    -fx-font-size: 14px;\n" + "    -fx-font-family: Arial;");
+		                    confirmButton.setOnAction((ActionEvent event) -> {
+		                    	int num = doctors_tableView.getSelectionModel().getSelectedIndex();
+
+								if ((num - 1) < -1) {
+									alert.errorMessage("Please select item first");
+									return;
+								}
+		                    	Data dData = doctors_tableView.getSelectionModel().getSelectedItem();
+		                        try {
+		                                    String updataData = "UPDATE doctor set status=? WHERE doctor_id = '" +dData.getId_d() + "'";
+		                                    prepare = connect.prepareStatement(updataData);
+		                                    prepare.setString(1, "confirm");
+		                                    prepare.executeUpdate();
+											alert.successMessage("confirm successfully!");
+		                                    
+		                                }
+		                                catch (Exception e) {
+		                                    e.printStackTrace();
+		                                }
+		                        dashboardDisplayData_doctor();
+		                    
+		                    });
+
+		                    declineButton.setOnAction((ActionEvent event) -> {
+		                    	int num = doctors_tableView.getSelectionModel().getSelectedIndex();
+
+								if ((num - 1) < -1) {
+									alert.errorMessage("Please select item first");
+									return;
+								}
+		                    	Data dData = doctors_tableView.getSelectionModel().getSelectedItem();
+
+		                        try {
+		                        	String updataData = "UPDATE doctor set status=? WHERE doctor_id = '" +dData.getId_d() + "'";
+		                                    prepare = connect.prepareStatement(updataData);
+		                                    prepare.setString(1, "inactive");
+		                                    prepare.executeUpdate();
+											alert.successMessage("decline successfully!");
+		                                    
+		                                }
+		                                catch (Exception e) {
+		                                    e.printStackTrace();
+		                                }
+		                        dashboardDisplayData_doctor();
+		                        
+		                    });
+
+		                    HBox manageBtn = new HBox(confirmButton, declineButton);
+		                    manageBtn.setAlignment(Pos.CENTER);
+		                    manageBtn.setSpacing(5);
+		                    setGraphic(manageBtn);
+		                    setText(null);
+		                }
+		            }
+		        };
+		        return cell;
+		    };
+		    doctors_col_action.setCellFactory(celle);
+		    doctors_tableView.setItems(doctorData);
+		}
 	    
 	    public void switchForm(ActionEvent event) {
 
@@ -419,7 +574,8 @@ public class MainSceneController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		runTime();
 		displayAdminIDUsername();
-		
+		dashboardDisplayData_doctor();
+		actionButtons();
 	}
 
 }

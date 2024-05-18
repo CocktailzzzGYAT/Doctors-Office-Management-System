@@ -190,9 +190,9 @@
                                           <String fx:value="radius" />
                                        </styleClass>
                                        <children>
-                                          <AreaChart fx:id="dashboad_chart_PD" layoutX="-98.0" layoutY="-1.0" prefHeight="299.0" prefWidth="293.0" title="Patient's Data" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <AreaChart fx:id="dashboad_chart_PD" layoutX="-98.0" layoutY="-1.0" prefHeight="299.0" prefWidth="293.0" styleClass="chart-area-series0" stylesheets="@DoctorMainFormDesign.css" title="Patient's Data" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <xAxis>
-                                                <CategoryAxis side="BOTTOM" />
+                                                <CategoryAxis side="BOTTOM" stylesheets="@DoctorMainFormDesign.css" />
                                              </xAxis>
                                              <yAxis>
                                                 <NumberAxis side="LEFT" />

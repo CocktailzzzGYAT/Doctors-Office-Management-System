@@ -8,10 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,10 +22,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -34,6 +38,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -771,12 +776,15 @@ public class DoctorMainFormController implements Initializable {
 			appointments_form.setVisible(true);
 			profile_form.setVisible(false);
 			current_form.setText("APPOINTMENTS");
+			appointmentAppointmentID();
 		} else if (event.getSource() == profile_btn) {
 			dashboard_form.setVisible(false);
 			patients_form.setVisible(false);
 			appointments_form.setVisible(false);
 			profile_form.setVisible(true);
 			current_form.setText("PROFILE");
+			
+			
 		}
 	}
 	
@@ -1043,8 +1051,7 @@ public class DoctorMainFormController implements Initializable {
 
 	    }
   
-	    
-	    
+
 
 	public void runTime() {
 		new Thread() {
@@ -1091,9 +1098,6 @@ public class DoctorMainFormController implements Initializable {
 	
 	
 	
-	
-	
-	
 	public void dashbboardDisplayTA() {
 		String sql = "SELECT COUNT(id) FROM appointment WHERE status = 'Active' AND doctor = '" + Data.doctor_id + "' AND date_delete IS NULL";
 
@@ -1112,8 +1116,36 @@ public class DoctorMainFormController implements Initializable {
         }
     }
 	
-	boolean yoink = true;
 	
+	public void dashboardNOP() {
+	    dashboad_chart_PD.getData().clear();
+
+	    String sql = "SELECT date, COUNT(id) FROM patient WHERE doctor = '"
+	            + Data.doctor_id + "' GROUP BY TIMESTAMP(date) ASC LIMIT 8";
+	    connect = Database.connectDB();
+
+	    try {
+	        XYChart.Series chart = new XYChart.Series<>();
+	        prepare = connect.prepareStatement(sql);
+	        result = prepare.executeQuery();
+
+	        while (result.next()) {
+	            chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
+	            
+	        }
+
+	        dashboad_chart_PD.getData().add(chart);
+	        
+	        // Apply CSS styling
+	        //dashboad_chart_PD.setStyle("-fx-background-color: lavender; -fx-padding: 10px;");
+	     // Assuming you have a reference to the series
+	        chart.getNode().setStyle("-fx-stroke: rgba(83, 59, 173, 0.5);");
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
 	
 	@FXML
 	private Text Quote;
@@ -1127,6 +1159,7 @@ public class DoctorMainFormController implements Initializable {
 		runTime();
 		registerpatientID();
 		
+		
 		appointmentAppointmentID();
 		appointmentShowData();
 		dashboardDisplayData();
@@ -1139,7 +1172,7 @@ public class DoctorMainFormController implements Initializable {
 		
 		dashbboardDisplayTA();
 		dashbboardDisplayTP();
-		
+
 		
 		profileSpecializedList();
 		profileGenderList();
@@ -1147,8 +1180,16 @@ public class DoctorMainFormController implements Initializable {
 		profileFields();
 		profileLabels();
 		
-		
+		dashboardNOP();
+		// Look up the first series fill.
+		Node fillNode = dashboad_chart_PD.lookup(".default-color0.chart-series-area-fill");
 
+		// Set the first series fill to translucent pale green.
+		fillNode.setStyle("-fx-fill: rgba(83, 59, 173, 0.5);");
+
+		
+		
+		
 	}
 
 }

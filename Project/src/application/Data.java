@@ -49,5 +49,91 @@ public class Data {
     public static String temp_appDoctor;
     public static String temp_appSpecialized;
     public static String temp_appStatus;
+    
+    
+    public String id_d;
+    public String name_d;
+    public String password_d;
+    public String email_d;
+    public String gender_d;
+    public String number_d;
+    public String specialization_d;
+    public String address_d;
+    public String status_d;
+    public String action_d;
+
+    
+    public String getPassword_d() {
+return password_d;
+}
+
+public void setPassword_d(String password_d) {
+this.password_d = password_d;
+}
+
+public String getEmail_d() {
+return email_d;
+}
+
+public void setEmail_d(String email_d) {
+this.email_d = email_d;
+}
+
+public String getGender_d() {
+return gender_d;
+}
+    public String getId_d() {
+        return id_d;}
+    public String getName_d() {
+        return name_d;}
+    
+public void setGender_d(String gender_d) {
+this.gender_d = gender_d;
+}
+
+public String getNumber_d() {
+return number_d;
+}
+
+public void setNumber_d(String number_d) {
+this.number_d = number_d;
+}
+
+public String getSpecialization_d() {
+return specialization_d;
+}
+
+public void setSpecialization_d(String specialization_d) {
+this.specialization_d = specialization_d;
+}
+
+public String getAddress_d() {
+return address_d;
+}
+
+public void setAddress_d(String address_d) {
+this.address_d = address_d;
+}
+
+public String getStatus_d() {
+return status_d;
+}
+
+public void setStatus_d(String status_d) {
+this.status_d = status_d;
+}
+        public Data(String id_d, String name_d, String password_d, String email_d, String gender_d, String number_d,
+String specialization_d, String address_d, String status_d) {
+super();
+this.id_d = id_d;
+this.name_d = name_d;
+this.password_d = password_d;
+this.email_d = email_d;
+this.gender_d = gender_d;
+this.number_d = number_d;
+this.specialization_d = specialization_d;
+this.address_d = address_d;
+this.status_d = status_d;
+}
 
 }
