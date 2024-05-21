@@ -2,12 +2,18 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -39,44 +45,46 @@ import application.AlertMessage;
 
 public class MainSceneController implements Initializable {
 	
-	   @FXML
-	    private TableColumn<?, ?> appointments_action;
+	@FXML
+    private TableColumn<AppointmentData, String> appointments_action;
 
-	    @FXML
-	    private TableColumn<?, ?> appointments_appointmentID;
+	@FXML
+    private TableView<AppointmentData> appointments_tableView;
+
+    @FXML
+    private TableColumn<AppointmentData, String> appointments_appointmentID;
 
 	    @FXML
 	    private Button appointments_btn;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_contactNumber;
+	    private TableColumn<AppointmentData, String> appointments_contactNumber;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_date;
+	    private TableColumn<AppointmentData, String> appointments_description;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_dateDelete;
+	    private TableColumn<AppointmentData, String> appointments_date;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_dateModify;
+	    private TableColumn<AppointmentData, String> appointments_dateModify;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_description;
+	    private TableColumn<AppointmentData, String> appointments_dateDelete;
 
 	    @FXML
 	    private AnchorPane appointments_form;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_gender;
+	    private TableColumn<AppointmentData, String> appointments_name;
 
 	    @FXML
-	    private TableColumn<?, ?> appointments_name;
-
+	    private TableColumn<AppointmentData, String> appointments_gender;
+	    
 	    @FXML
-	    private TableColumn<?, ?> appointments_status;
+	    private TableColumn<AppointmentData, String> appointments_status;
 
-	    @FXML
-	    private TableView<?> appointments_tableView;
+	    
 
 	    @FXML
 	    private Label current_form;
@@ -175,40 +183,42 @@ public class MainSceneController implements Initializable {
 	    private Button patients_btn;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_action;
+	    private TableView<PatientsData> patients_tableView;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_contactNumber;
+	    private TableColumn<PatientsData, String> patients_col_patientID;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_date;
+	    private TableColumn<PatientsData, String> patients_col_name;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_dateDelete;
+	    private TableColumn<PatientsData, String> patients_col_gender;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_dateModify;
+	    private TableColumn<PatientsData, String> patients_col_contactNumber;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_description;
+	    private TableColumn<PatientsData, String> patients_col_description;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_gender;
+	    private TableColumn<PatientsData, String> patients_col_date;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_name;
+	    private TableColumn<PatientsData, String> patients_col_dateModify;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_patientID;
+	    private TableColumn<PatientsData, String> patients_col_dateDelete;
 
 	    @FXML
-	    private TableColumn<?, ?> patients_col_status;
+	    private TableColumn<PatientsData, String> patients_col_status;
+
+	    @FXML
+	    private TableColumn<PatientsData, String> patients_col_action;
 
 	    @FXML
 	    private AnchorPane patients_form;
 
-	    @FXML
-	    private TableView<?> patients_tableView;
+	    
 
 	    @FXML
 	    private Button payment_btn;
@@ -286,7 +296,7 @@ public class MainSceneController implements Initializable {
 	    private Label profile_label_name;
 
 	    @FXML
-	    private ComboBox<?> profile_status;
+	    private ComboBox<String> profile_status;
 
 	    @FXML
 	    private Button profile_updateBtn;
@@ -518,6 +528,193 @@ public class MainSceneController implements Initializable {
 
 	    }
 	    
+	    public void profileStatusList() {
+	        List<String> listS = new ArrayList<>();
+
+	        for (String data : Data.gender) {
+	            listS.add(data);
+	        }
+	        ObservableList listData = FXCollections.observableArrayList(listS);
+	        profile_status.setItems(listData);
+	    }
+	    
+	    public void profileUpdateBtn() {
+	        connect = Database.connectDB();
+	        if (profile_adminID.getText().isEmpty()
+	                || profile_username.getText().isEmpty()
+	                || profile_email.getText().isEmpty()
+	                || profile_status.getSelectionModel().getSelectedItem() == null) {
+	            alert.errorMessage("Please fill all blank fields");
+	        } else {
+	            if (Data.path == null || "".equals(Data.path)) {
+	                String updateData = "UPDATE admin SET username = ?, email = ?, gender = ? "
+	                        + "WHERE admin_id = " + Data.admin_id;
+
+	                try {
+	                    prepare = connect.prepareStatement(updateData);
+	                    prepare.setString(1, profile_username.getText());
+	                    prepare.setString(2, profile_email.getText());
+	                    prepare.setString(3, profile_status.getSelectionModel().getSelectedItem());
+
+	                    prepare.executeUpdate();
+
+	                    profileDisplayInfo();
+
+	                    alert.successMessage("Updated Successfully");
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+
+	            } else {
+	                String updateData = "UPDATE admin SET username = ?, email = ?, image = ?, gender = ? "
+	                        + "WHERE admin_id = " + Data.admin_id;
+	                try {
+	                    prepare = connect.prepareStatement(updateData);
+	                    prepare.setString(1, profile_username.getText());
+	                    prepare.setString(2, profile_email.getText());
+
+	                    String path = Data.path;
+	                    path = path.replace("\\", "\\\\");
+	                    Path transfer = Paths.get(path);
+
+	                    Path copy = Paths.get("C:\\Users\\WINDOWS 10\\Documents\\NetBeansProjects\\HospitalManagementSystem\\src\\Admin_Directory\\"
+	                            + Data.admin_id + ".jpg");
+
+	                    Files.copy(transfer, copy, StandardCopyOption.REPLACE_EXISTING);
+	                    prepare.setString(3, copy.toAbsolutePath().toString());
+	                    prepare.setString(4, profile_status.getSelectionModel().getSelectedItem());
+
+	                    prepare.executeUpdate();
+	                    profileDisplayInfo();
+	                    
+	                    alert.successMessage("Updated Successfully!");
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+
+	    }
+	    
+	    public void profileDisplayInfo() {
+
+	        String sql = "SELECT * FROM admin WHERE admin_id = " + Data.admin_id;
+	        System.out.println(Data.admin_id);
+	        connect = Database.connectDB();
+
+	        try {
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            if (result.next()) {
+	                profile_adminID.setText(result.getString("admin_id"));
+	                profile_username.setText(result.getString("username"));
+	                profile_email.setText(result.getString("email"));
+	                profile_status.getSelectionModel().select(result.getString("gender"));
+
+	                profile_label_adminIO.setText(result.getString("admin_id"));
+	                profile_label_name.setText(result.getString("username"));
+	                profile_label_email.setText(result.getString("email"));
+	                profile_label_dateCreated.setText(result.getString("date"));
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
+	    
+	    
+	    
+	    
+	    public void logoutBtn() {
+
+	        try {
+	            if (alert.confirmationMessage("Are you sure you want to logout?")) {
+	                Parent root = FXMLLoader.load(getClass().getResource("ProjectDesign.fxml"));
+	                Stage stage = new Stage();
+
+	                stage.setScene(new Scene(root));
+	                stage.show();
+
+	                
+	                logout_btn.getScene().getWindow().hide();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
+	    
+	    public void dashboardTP() {
+
+	        String sql = "SELECT COUNT(id) FROM patient WHERE date_delete IS NULL";
+
+	        connect = Database.connectDB();
+
+	        int tempTP = 0;
+	        try {
+
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            if (result.next()) {
+	                tempTP = result.getInt("COUNT(id)");
+	            }
+	            dashboard_TP.setText(String.valueOf(tempTP));
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
+	    
+	    public void dashboardTA() {
+
+	        String sql = "SELECT COUNT(id) FROM appointment WHERE date_delete IS NULL";
+
+	        connect = Database.connectDB();
+
+	        int tempTA = 0;
+	        try {
+
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            if (result.next()) {
+	                tempTA = result.getInt("COUNT(id)");
+	            }
+	            dashboard_AP.setText(String.valueOf(tempTA));
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
+	    
+	    public void dashboardAD() {
+
+	        String sql = "SELECT COUNT(id) FROM doctor WHERE status = 'Active' or status = 'Confirm' AND delete_date IS NULL";
+
+	        connect = Database.connectDB();
+
+	        int tempAD = 0;
+	        try {
+
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            if (result.next()) {
+	                tempAD = result.getInt("COUNT(id)");
+	            }
+	            dashboard_AD.setText(String.valueOf(tempAD));
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	    }
+	    
+	    
 	    public void displayAdminIDUsername() {
 
 	        String sql = "SELECT * FROM admin WHERE username = '"
@@ -546,6 +743,131 @@ public class MainSceneController implements Initializable {
 	    
 	    
 	    
+	    public ObservableList<PatientsData> patientGetData() {
+
+	        ObservableList<PatientsData> listData = FXCollections.observableArrayList();
+
+	        String sql = "SELECT * FROM patient";
+
+	        connect = Database.connectDB();
+
+	        try {
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            PatientsData pData;
+
+	            while (result.next()) {
+//	                PatientsData(Integer id, Integer patientID, String password, String fullName, Long mobileNumber
+//	            , String address, String image, String description, String diagnosis, String treatment
+//	            , String doctor, String specialized, Date date, Date dateModify
+//	            , Date dateDelete, String status)
+	            	pData = new PatientsData(result.getInt("id"), result.getString("patient_name"),
+							result.getString("gender"), result.getString("patient_phone"),
+							result.getString("patient_adress"), result.getString("patient_age"), result.getDate("date"),
+							result.getDate("date_modify"), result.getDate("date_delete"));
+
+	                listData.add(pData);
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return listData;
+	    }
+
+	    public ObservableList<PatientsData> patientListData;
+
+	    public void patientDisplayData() {
+	        patientListData = patientGetData();
+
+	        patients_col_patientID.setCellValueFactory(new PropertyValueFactory<>("id"));
+	        patients_col_name.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+	        patients_col_gender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+	        patients_col_contactNumber.setCellValueFactory(new PropertyValueFactory<>("mobileNumber"));
+	        patients_col_description.setCellValueFactory(new PropertyValueFactory<>("address"));
+	        patients_col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+	        patients_col_dateModify.setCellValueFactory(new PropertyValueFactory<>("dateModify"));
+	        patients_col_dateDelete.setCellValueFactory(new PropertyValueFactory<>("dateDelete"));
+	        
+
+	        patients_tableView.setItems(patientListData);
+	    }
+	    
+	    public void patientActionButton() {
+
+	        connect = Database.connectDB();
+	        patientListData = patientGetData();
+
+	        Callback<TableColumn<PatientsData, String>, TableCell<PatientsData, String>> cellFactory = (TableColumn<PatientsData, String> param) -> {
+	            final TableCell<PatientsData, String> cell = new TableCell<PatientsData, String>() {
+	                public void updateItem(String item, boolean empty) {
+	                    super.updateItem(item, empty);
+
+	                    if (empty) {
+	                        setGraphic(null);
+	                        setText(null);
+	                    } else {
+	                        
+	                        Button removeButton = new Button("Delete");
+
+	                        
+
+	                        removeButton.setStyle("-fx-background-color: linear-gradient(to bottom right, #188ba7, #306090);\n"
+	                                + "    -fx-cursor: hand;\n"
+	                                + "    -fx-text-fill: #fff;\n"
+	                                + "    -fx-font-size: 14px;\n"
+	                                + "    -fx-font-family: Arial;");
+
+	                        ;
+
+	                        removeButton.setOnAction((ActionEvent event) -> {
+	                            PatientsData pData = patients_tableView.getSelectionModel().getSelectedItem();
+	                            int num = patients_tableView.getSelectionModel().getSelectedIndex();
+
+	                            if ((num - 1) < -1) {
+	                                alert.errorMessage("Please select item first");
+	                                return;
+	                            }
+
+	                            String deleteData = "DELETE FROM patient WHERE id = '"
+	                                    + pData.getId() + "'";
+
+	                            try {
+	                                if (alert.confirmationMessage("Are you sure you want to delete Patient ID: " + pData.getId() + "?")) {
+	                                    prepare = connect.prepareStatement(deleteData);
+	                                    
+	                                    
+	                                    prepare.executeUpdate();
+
+	                                    
+	                                    alert.successMessage("Deleted Successfully!");
+
+	                                    patientDisplayData();
+	                                    
+	                                }
+	                            } catch (Exception e) {
+	                                e.printStackTrace();
+	                            }
+	                        });
+
+	                        HBox manageBtn = new HBox(removeButton);
+	                        manageBtn.setAlignment(Pos.CENTER);
+	                        manageBtn.setSpacing(5);
+	                        setGraphic(manageBtn);
+	                        setText(null);
+	                    }
+	                }
+	            };
+	            
+	            return cell;
+	        };
+
+	        patients_col_action.setCellFactory(cellFactory);
+	        patients_tableView.setItems(patientListData);
+
+	    }
+	    
 	    public void runTime() {
 
 	        new Thread() {
@@ -569,6 +891,59 @@ public class MainSceneController implements Initializable {
 	        }.start();
 
 	    }
+	    
+	    public ObservableList<AppointmentData> appointmentGetData() {
+
+	        ObservableList<AppointmentData> listData = FXCollections.observableArrayList();
+
+	        String sql = "SELECT * FROM appointment";
+
+	        connect = Database.connectDB();
+
+	        try {
+	            prepare = connect.prepareStatement(sql);
+	            result = prepare.executeQuery();
+
+	            AppointmentData aData;
+	            while (result.next()) {
+//	            AppointmentData(Integer id, Integer appointmentID, String name, String gender,
+//	            Long mobileNumber, String description, String diagnosis, String treatment, String address,
+//	            Date date, Date dateModify, Date dateDelete, String status, Date schedule)
+	                aData = new AppointmentData(result.getInt("id"), result.getInt("appointment_id"),
+	                        result.getString("name"), result.getString("gender"), result.getLong("mobile_number"),
+	                        result.getString("description"), result.getString("diagnosis"),
+	                        result.getString("treatment"), result.getString("address"),
+	                        result.getString("doctor"), result.getString("specialized"),
+	                        result.getDate("date"), result.getDate("date_modify"),
+	                        result.getDate("date_delete"), result.getString("status"),
+	                        result.getDate("schedule"));
+	                listData.add(aData);
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return listData;
+	    }
+
+	    private ObservableList<AppointmentData> appointmentListData;
+
+	    public void appointmentDisplayData() {
+	        appointmentListData = appointmentGetData();
+
+	        appointments_appointmentID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+	        appointments_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+	        appointments_gender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+	        appointments_contactNumber.setCellValueFactory(new PropertyValueFactory<>("mobileNumber"));
+	        appointments_description.setCellValueFactory(new PropertyValueFactory<>("description"));
+	        appointments_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+	        appointments_dateModify.setCellValueFactory(new PropertyValueFactory<>("dateModify"));
+	        appointments_dateDelete.setCellValueFactory(new PropertyValueFactory<>("dateDelete"));
+	        appointments_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+	        appointments_tableView.setItems(appointmentListData);
+
+	    }
+
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -576,6 +951,20 @@ public class MainSceneController implements Initializable {
 		displayAdminIDUsername();
 		dashboardDisplayData_doctor();
 		actionButtons();
+		
+		dashboardTP();
+		dashboardTA();
+		dashboardAD();
+		
+		
+		patientDisplayData();
+		patientActionButton();
+		
+		appointmentDisplayData();
+		
+		profileStatusList();
+        profileDisplayInfo();
+        
 	}
 
 }

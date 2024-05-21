@@ -783,6 +783,8 @@ public class DoctorMainFormController implements Initializable {
 			appointments_form.setVisible(false);
 			profile_form.setVisible(true);
 			current_form.setText("PROFILE");
+			profile_doctorID.setDisable(true);
+			profile_status.setDisable(true);
 			
 			
 		}
@@ -890,6 +892,7 @@ public class DoctorMainFormController implements Initializable {
                   appointmentAppointmentID();
                   appointmentClearBtn();
                   alert.successMessage("Successully added!");
+                  appointmentAppointmentID();
                   dashbboardDisplayTA();
 
               }

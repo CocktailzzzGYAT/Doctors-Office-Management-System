@@ -21,6 +21,7 @@ public class Data {
     public static String temp_name;
     public static String temp_gender;
     public static Long temp_number;
+    public static String temp_numberr;
     public static String temp_string;
     public static String temp_address;
     public static String temp_status;
