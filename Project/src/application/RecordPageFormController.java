@@ -5,13 +5,18 @@
  */
 package application;
 
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,6 +88,26 @@ public class RecordPageFormController extends DoctorMainFormController implement
 	
 
 	AlertMessage alert = new AlertMessage();
+	
+	
+	private boolean searchFindsPatient(PatientsData patient, String searchText) {
+        return (patient.getFullName().toLowerCase().contains(searchText.toLowerCase()))
+                || (patient.getGender().toLowerCase().contains(searchText.toLowerCase()))
+                || (patient.getMobileNumber().toLowerCase().contains(searchText.toLowerCase()))
+                || (patient.getAddress().toLowerCase().contains(searchText.toLowerCase()));
+    }
+
+    private ObservableList<PatientsData> filterList(List<PatientsData> list, String searchText) {
+        List<PatientsData> filteredList = new ArrayList<>();
+        for (PatientsData patient : list) {
+            if (searchFindsPatient(patient, searchText)) {
+                filteredList.add(patient);
+            }
+        }
+        return FXCollections.observableList(filteredList);
+    }
+	
+	
 
 	public ObservableList<PatientsData> getPatientRecordData() {
 
@@ -115,6 +140,8 @@ public class RecordPageFormController extends DoctorMainFormController implement
 
 	public void displayPatientsData() {
 		patientRecordData = getPatientRecordData();
+		
+		
 
 		recordpage_col_patientID.setCellValueFactory(new PropertyValueFactory<>("id"));
 		recordpage_col_name.setCellValueFactory(new PropertyValueFactory<>("fullName"));
@@ -253,7 +280,13 @@ public class RecordPageFormController extends DoctorMainFormController implement
 		displayPatientsData();
 
 		actionButtons();
-
+		
+		recordpage_search.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                recordpage_tableView.setItems(filterList(patientRecordData, newValue));
+            }
+        });
 	}
 
 }

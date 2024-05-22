@@ -763,6 +763,7 @@ public class DoctorMainFormController implements Initializable {
 			appointments_form.setVisible(false);
 			profile_form.setVisible(false);
 			dashbboardDisplayTP();
+			dashboardNOP();
 			current_form.setText("DASHBOARD");
 		} else if (event.getSource() == patients_btn) {
 			dashboard_form.setVisible(false);
@@ -785,13 +786,9 @@ public class DoctorMainFormController implements Initializable {
 			current_form.setText("PROFILE");
 			profile_doctorID.setDisable(true);
 			profile_status.setDisable(true);
-			
-			
+				
 		}
 	}
-	
-	
-	
 	
 	public void logoutBtn() {
 
@@ -1124,7 +1121,7 @@ public class DoctorMainFormController implements Initializable {
 	    dashboad_chart_PD.getData().clear();
 
 	    String sql = "SELECT date, COUNT(id) FROM patient WHERE doctor = '"
-	            + Data.doctor_id + "' GROUP BY TIMESTAMP(date) ASC LIMIT 8";
+	            + Data.doctor_id + "' GROUP BY TIMESTAMP(date) ASC";
 	    connect = Database.connectDB();
 
 	    try {
@@ -1184,10 +1181,10 @@ public class DoctorMainFormController implements Initializable {
 		profileLabels();
 		
 		dashboardNOP();
-		// Look up the first series fill.
+		
 		Node fillNode = dashboad_chart_PD.lookup(".default-color0.chart-series-area-fill");
 
-		// Set the first series fill to translucent pale green.
+		
 		fillNode.setStyle("-fx-fill: rgba(83, 59, 173, 0.5);");
 
 		

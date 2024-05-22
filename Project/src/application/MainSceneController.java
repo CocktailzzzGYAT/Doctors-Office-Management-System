@@ -391,12 +391,12 @@ public class MainSceneController implements Initializable {
 		                    Button confirmButton = new Button("Confirm");
 		                    Button declineButton = new Button("Decline");
 		                    confirmButton
-							.setStyle("-fx-background-color: #306090;\n"
+							.setStyle("-fx-background-color: linear-gradient(to bottom right, #188ba7, #306090);\n"
 									+ "    -fx-cursor: hand;\n" + "    -fx-text-fill: #fff;\n"
 									+ "    -fx-font-size: 14px;\n" + "    -fx-font-family: Arial;");
 
 		                    declineButton
-							.setStyle("-fx-background-color: #306090;\n"
+							.setStyle("-fx-background-color: linear-gradient(to bottom right, #188ba7, #306090);\n"
 									+ "    -fx-cursor: hand;\n" + "    -fx-text-fill: #fff;\n"
 									+ "    -fx-font-size: 14px;\n" + "    -fx-font-family: Arial;");
 		                    confirmButton.setOnAction((ActionEvent event) -> {
